@@ -3,7 +3,7 @@ package com.nverno.popularmovies.model;
 public class Movie {
 
     private int id;
-    private String original_title;
+    private String title;
     private String poster_path;
     private String overview;
     private double vote_average;
@@ -12,13 +12,13 @@ public class Movie {
     private static final String poster_url = "https://image.tmdb.org/t/p/w185";
 
     public Movie(int id,
-                 String original_title,
+                 String title,
                  String poster_path,
                  String overview,
                  double vote_average,
                  String release_date) {
         this.id = id;
-        this.original_title = original_title;
+        this.title = title;
         this.poster_path = poster_path;
         this.overview = overview;
         this.vote_average = vote_average;
@@ -35,11 +35,11 @@ public class Movie {
     }
 
     public String getTitle() {
-        return original_title;
+        return title;
     }
 
-    public void setTitle(String original_title) {
-        this.original_title = original_title;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getPosterPath() {
