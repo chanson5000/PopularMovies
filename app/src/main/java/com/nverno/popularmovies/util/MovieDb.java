@@ -13,7 +13,7 @@ public class MovieDb implements MovieDbApi {
     final static String TOP_RATED = "movie/top_rated";
     final static String AUTH_STRING = "?api_key=";
     final static String PAGE_ONE = "&page=1";
-    final static String AUTH = AUTH_STRING + KEY;
+    final static String AUTH = AUTH_STRING + API_KEY;
 
     public static List<Movie> getTopRated() {
         try {
