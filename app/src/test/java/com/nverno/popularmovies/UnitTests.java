@@ -29,7 +29,7 @@ public class UnitTests {
     private static final String MOVIEDB_BASE_URL = "https://api.themoviedb.org/3/";
     private static final String TOP_RATED = "movie/top_rated";
     private static final String AUTH_STRING = "?api_key=";
-    private static final String AUTH = AUTH_STRING + MovieDb.KEY;
+    private static final String AUTH = AUTH_STRING + MovieDb.API_KEY;
 
     @Before
     public void setUp() throws Exception {
