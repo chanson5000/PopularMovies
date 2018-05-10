@@ -10,10 +10,6 @@ import org.junit.Test;
 import java.net.URL;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
 import static org.junit.Assert.*;
 
 /**
@@ -30,6 +26,10 @@ public class UnitTests {
     private double vote_average;
     private String release_date;
     private static final String poster_url = "https://image.tmdb.org/t/p/w185";
+    private static final String MOVIEDB_BASE_URL = "https://api.themoviedb.org/3/";
+    private static final String TOP_RATED = "movie/top_rated";
+    private static final String AUTH_STRING = "?api_key=";
+    private static final String AUTH = AUTH_STRING + MovieDb.KEY;
 
     @Before
     public void setUp() throws Exception {
@@ -62,8 +62,8 @@ public class UnitTests {
     }
 
     @Test
-    public void getOkHttpResponse() throws Exception {
-        URL url = new URL("https://api.themoviedb.org/3/movie/top_rated?api_key=" + MovieDb.KEY);
+    public void fetchHttp_returnDataString() throws Exception {
+        URL url = new URL(MOVIEDB_BASE_URL + TOP_RATED + AUTH);
         String response = Network.fetchHttp(url);
         System.out.print(response);
 
@@ -71,8 +71,8 @@ public class UnitTests {
     }
 
     @Test
-    public void getTopRated() {
-        List<Movie> topRateResults = MovieDb.GetTopRated();
+    public void getTopRated_returnListOfMovies() {
+        List<Movie> topRateResults = MovieDb.getTopRated();
 
         int len = topRateResults.size();
         for (int i = 0; i < len; i++) {
