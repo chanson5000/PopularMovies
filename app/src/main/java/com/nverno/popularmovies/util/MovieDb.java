@@ -7,7 +7,7 @@ import com.nverno.popularmovies.model.Movie;
 import java.net.URL;
 import java.util.List;
 
-public class MovieDb implements MovieDBApi {
+public class MovieDb implements MovieDbApi {
 
     final static String BASE_URL = "https://api.themoviedb.org/3/";
     final static String TOP_RATED = "movie/top_rated";
