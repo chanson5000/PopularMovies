@@ -6,7 +6,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity implements
 
         // LinearLayoutManager measures and positions item views within the RecyclerView.
         // Note: There are other LayoutManagers available.
-        LinearLayoutManager layoutManager =
-                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        GridLayoutManager layoutManager =
+                new GridLayoutManager(this, 2);
 
         // Associate the LayoutManager with the RecyclerView.
         mRecyclerView.setLayoutManager(layoutManager);
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements
             public List<Movie> loadInBackground() {
                     URL requestUrl = MovieDb.getTopRatedUrl();
                     try {
-                        String jsonResponse = Network.fetchHttp(requestUrl);
+                        String jsonResponse = Network.fetchHttpsResponse(requestUrl);
 
                         List<Movie> movies = JsonParse.topRatedResults(jsonResponse);
 
