@@ -9,7 +9,7 @@ public class Movie {
     private double vote_average;
     private String release_date;
     private String poster_image;
-    private static final String poster_url = "https://image.tmdb.org/t/p/w185";
+    private static final String poster_url = "https://image.tmdb.org/t/p/w500";
 
     public Movie(int id,
                  String title,
