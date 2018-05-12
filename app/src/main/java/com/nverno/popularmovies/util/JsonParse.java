@@ -10,10 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JsonParse {
+    // Just parsing our Json string into a movie object here...
     public static List<Movie> topRatedResults(String jsonString) throws JSONException {
+
         JSONObject jsonMoviesObject = new JSONObject(jsonString);
         JSONArray moviesResultsArray = jsonMoviesObject.getJSONArray("results");
+
         List<Movie> movies = new ArrayList<>();
+
         int len = moviesResultsArray.length();
         for (int i=0; i<len; i++)
         {
