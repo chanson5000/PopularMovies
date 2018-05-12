@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final int SORT_TOP_RATED = 1;
 
     // A persistent way to keep track of our sort type.
-    private static int sMovieSortType = SORT_MOST_POPULAR;
+    private static int sMovieSortType;
 
     // To identify that we are moving movie data through an intent.
     private static final String INTENT_MOVIE_DATA = "MOVIE";
@@ -147,7 +147,11 @@ public class MainActivity extends AppCompatActivity implements
         getMenuInflater().inflate(R.menu.main, menu);
 
         // Sort by most popular is default and checked.
-        menu.findItem(R.id.sort_by_most_popular).setChecked(true);
+        if (sMovieSortType == 0) {
+            menu.findItem(R.id.sort_by_most_popular).setChecked(true);
+        } else {
+            menu.findItem(R.id.sort_by_top_rated).setChecked(true);
+        }
 
         return true;
     }
