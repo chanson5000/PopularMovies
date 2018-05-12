@@ -29,8 +29,7 @@ public class Network {
 
     public static URL makeUrl(String toConvert) {
         try {
-            URL url = new URL(toConvert);
-            return url;
+            return new URL(toConvert);
         } catch (MalformedURLException e){
             e.printStackTrace();
             return null;
