@@ -3,6 +3,10 @@ package com.nverno.popularmovies.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Movie implements Parcelable {
 
     private int id;
@@ -39,6 +43,16 @@ public class Movie implements Parcelable {
         this.vote_average = in.readDouble();
         this.release_date = in.readString();
         this.poster_image = in.readString();
+    }
+
+    private String ConvertDateFormat(String oldFormat) {
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(oldFormat);
+            return new SimpleDateFormat("MMM d, yyyy").format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return oldFormat;
     }
 
     @Override
@@ -102,7 +116,7 @@ public class Movie implements Parcelable {
     }
 
     public String getReleaseDate() {
-        return release_date;
+        return ConvertDateFormat(release_date);
     }
 
     public void setReleaseDate(String release_date) {
