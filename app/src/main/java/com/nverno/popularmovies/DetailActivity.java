@@ -7,27 +7,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.nverno.popularmovies.model.Movie;
 import com.squareup.picasso.Picasso;
+import butterknife.BindView;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private Movie movie;
-
-    private ImageView moviePosterDetail;
-    private TextView movieTitleDetail;
-    private TextView movieRatingDetail;
-    private TextView movieReleaseDetail;
-    private TextView movieDescriptionDetail;
+    @BindView(R.id.movie_poster_detail) ImageView moviePosterDetail;
+    @BindView(R.id.movie_title_detail) TextView movieTitleDetail;
+    @BindView(R.id.movie_rating_detail) TextView movieRatingDetail;
+    @BindView(R.id.movie_release_detail) TextView movieReleaseDetail;
+    @BindView(R.id.move_description_detail) TextView movieDescriptionDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
-        moviePosterDetail = findViewById(R.id.movie_poster_detail);
-        movieTitleDetail = findViewById(R.id.movie_title_detail);
-        movieRatingDetail = findViewById(R.id.movie_rating_detail);
-        movieReleaseDetail = findViewById(R.id.movie_release_detail);
-        movieDescriptionDetail = findViewById(R.id.move_description_detail);
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -39,7 +32,7 @@ public class DetailActivity extends AppCompatActivity {
                 Bundle bundle = intentThatStartedThisActivity.getExtras();
 
                 // Turn that bundle back into the Movie object.
-                movie = bundle.getParcelable("MOVIE");
+                Movie movie = bundle.getParcelable("MOVIE");
 
                 Picasso.with(this).load(movie.getPosterImage()).into(moviePosterDetail);
 
