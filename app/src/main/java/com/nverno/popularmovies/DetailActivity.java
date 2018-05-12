@@ -1,31 +1,14 @@
 package com.nverno.popularmovies;
 
-import android.app.LoaderManager;
 import android.content.Intent;
-import android.database.Cursor;
-
-// You must add "dataBinding.enabled = true" to your build file for this to import.
-import android.databinding.DataBindingUtil;
-
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ShareCompat;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.nverno.popularmovies.databinding.ActivityDetailBinding;
 import com.nverno.popularmovies.model.Movie;
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
-
-    // The ID responsible for loading the poster details for each poster.
-    private static final int ID_DETAIL_LOADER = 427;
 
     private Movie movie;
 
@@ -49,14 +32,14 @@ public class DetailActivity extends AppCompatActivity {
         Intent intentThatStartedThisActivity = getIntent();
 
         if (intentThatStartedThisActivity != null) {
-
+            // The extra data is the Movie object implementing Parcelable.
             if (intentThatStartedThisActivity.hasExtra("MOVIE")) {
 
+                // Put the parcelable into a bundle.
                 Bundle bundle = intentThatStartedThisActivity.getExtras();
 
+                // Turn that bundle back into the Movie object.
                 movie = bundle.getParcelable("MOVIE");
-
-//                movie = intentThatStartedThisActivity.getExtras().("MOVIE");
 
                 Picasso.with(this).load(movie.getPosterImage()).into(moviePosterDetail);
 
@@ -64,11 +47,7 @@ public class DetailActivity extends AppCompatActivity {
                 movieRatingDetail.setText(Double.toString(movie.getVoteAverage()));
                 movieReleaseDetail.setText(movie.getReleaseDate());
                 movieDescriptionDetail.setText(movie.getOverview());
-
+            }
         }
-        }
-
     }
-
-
 }
