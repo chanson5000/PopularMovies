@@ -13,46 +13,33 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
 import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.util.JsonParse;
 import com.nverno.popularmovies.util.MovieDb;
 import com.nverno.popularmovies.util.Network;
-
 import java.net.URL;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<Movie>>,
         PosterAdapter.PosterAdapterOnClickHandler {
 
     private PosterAdapter mPosterAdapter;
-    private RecyclerView mRecyclerView;
-    private int mPosition = RecyclerView.NO_POSITION;
 
-    // Arbitrary ID used to identify the loader.
+    @BindView(R.id.recycler_view_posters) RecyclerView mRecyclerView;
+
     private static final int POSTER_LOADER = 0;
-
-    // For ButterKnife
-//    @BindView(R.id.movie_poster) ImageView moviePosterIv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // TODO: Check out possible implementation of getSupportActionBar()
 
-        // If we decide to use ButterKnife in the future.
-//        ButterKnife.bind(this);
+        ButterKnife.bind(this);
 
-        // Get our reference of RecyclerView from XML.
-        mRecyclerView = findViewById(R.id.recycler_view_posters);
-
-        // TODO: Implement progress bar.
-
-        // LinearLayoutManager measures and positions item views within the RecyclerView.
-        // Note: There are other LayoutManagers available.
         GridLayoutManager layoutManager =
                 new GridLayoutManager(this, 2);
 
