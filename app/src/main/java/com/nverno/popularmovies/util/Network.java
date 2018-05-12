@@ -1,5 +1,7 @@
 package com.nverno.popularmovies.util;
 
+import android.net.Uri;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -14,7 +16,7 @@ import okhttp3.Response;
 
 public class Network {
 
-    public static String fetchHttp(URL url) throws IOException {
+    public static String fetchHttpsResponse(URL url) throws IOException {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -25,26 +27,6 @@ public class Network {
         return response.body().string();
     }
 
-    public static String getResponseFromHttpsUrl(URL url) throws IOException {
-        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-        try {
-            InputStream in = urlConnection.getInputStream();
-
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
-
-            boolean hasInput = scanner.hasNext();
-            String response = null;
-            if (hasInput) {
-                response = scanner.next();
-            }
-            scanner.close();
-            return response;
-        } finally {
-            urlConnection.disconnect();
-        }
-    }
-
     public static URL makeUrl(String toConvert) {
         try {
             URL url = new URL(toConvert);
@@ -53,5 +35,9 @@ public class Network {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static URL makeUrl(Uri toConvert) {
+        return makeUrl(toConvert.toString());
     }
 }
