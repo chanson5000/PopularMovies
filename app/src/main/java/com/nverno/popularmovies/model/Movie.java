@@ -3,8 +3,6 @@ package com.nverno.popularmovies.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 public class Movie implements Parcelable {
 
     private int id;
@@ -61,7 +59,6 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
-
 
     public int getId() {
         return id;
