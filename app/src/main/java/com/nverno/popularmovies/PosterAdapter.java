@@ -18,18 +18,32 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdap
     private Context mContext;
     private List<Movie> movies;
 
-    public PosterAdapter(@NonNull Context context) {
-        mContext = context;
+    private final PosterAdapterOnClickHandler mClickHandler;
+
+    public interface PosterAdapterOnClickHandler {
+        void onClick(Movie movieForDay);
     }
 
-    class PosterAdapterViewHolder extends RecyclerView.ViewHolder {
+    public PosterAdapter(PosterAdapterOnClickHandler clickHandler) {
+        mClickHandler = clickHandler;
+    }
+
+    class PosterAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView posterView;
 
         PosterAdapterViewHolder(View view) {
             super(view);
-
             posterView = view.findViewById(R.id.movie_poster);
+            view.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            Movie movieForDay = movies.get(adapterPosition);
+            mClickHandler.onClick(movieForDay);
+        }
+
     }
 
     @Override
@@ -46,10 +60,11 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdap
     }
 
     @Override
-        public void onBindViewHolder(PosterAdapterViewHolder posterAdapterViewHolder, int position) {
-
+    public void onBindViewHolder(PosterAdapterViewHolder posterAdapterViewHolder, int position) {
         Picasso.with(mContext).load(movies.get(position).getPosterImage()).into(posterAdapterViewHolder.posterView);
     }
+
+
 
     @Override
     public int getItemCount() {
