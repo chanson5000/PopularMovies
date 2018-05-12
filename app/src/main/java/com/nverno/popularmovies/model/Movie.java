@@ -3,7 +3,6 @@ package com.nverno.popularmovies.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.nio.file.SimpleFileVisitor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
