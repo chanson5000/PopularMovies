@@ -7,6 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -14,17 +15,26 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/movie_poster_detail"
-                android:layout_width="200dp"
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/poster_image_content_description" />
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/movie_poster_detail"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/poster_image_content_description" />
+            </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="center">
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/movie_title_detail"
@@ -35,11 +45,11 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:text="@string/rating"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/rating"
                     android:textSize="18sp" />
 
                 <TextView
@@ -50,13 +60,12 @@
                     android:textSize="20sp" />
 
                 <TextView
-                    android:text="@string/release_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:text="@string/release_date"
                     android:gravity="center"
-                    android:textSize="18sp"
-                    />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/movie_release_detail"
@@ -66,16 +75,14 @@
                     android:textSize="20sp" />
 
             </LinearLayout>
-
         </LinearLayout>
 
         <TextView
             android:id="@+id/move_description_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:layout_margin="5dp"/>
-
+            android:layout_margin="5dp"
+            android:textSize="20sp" />
     </LinearLayout>
 
 </ScrollView>
