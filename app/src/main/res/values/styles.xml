@@ -8,7 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/backgroundColor</item>
         <item name="android:textColor">@color/textColor</item>
-        <!--<item name="android:fontFamily">Droid Sans</item>-->
     </style>
 
 </resources>
