@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private PosterAdapter mPosterAdapter;
 
-    @BindView(R.id.recycler_view_posters) private RecyclerView mRecyclerView;
+    @BindView(R.id.recycler_view_posters) RecyclerView mRecyclerView;
 
     LoaderManager.LoaderCallbacks<List<Movie>> mCallback;
 
