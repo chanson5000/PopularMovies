@@ -1,6 +1,11 @@
 package com.nverno.popularmovies.model;
 
-public class Movie {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class Movie implements Parcelable {
 
     private int id;
     private String title;
@@ -25,6 +30,38 @@ public class Movie {
         this.release_date = release_date;
         this.poster_image = poster_url + poster_path;
     }
+
+    public Movie(Parcel in) {
+        this.id = in.readInt();
+        this.title = in.readString();
+        this.poster_path = in.readString();
+        this.overview = in.readString();
+        this.vote_average = in.readDouble();
+        this.release_date = in.readString();
+        this.poster_image = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(title);
+        dest.writeString(poster_path);
+        dest.writeString(overview);
+        dest.writeDouble(vote_average);
+        dest.writeString(release_date);
+        dest.writeString(poster_image);
+    }
+
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
 
     public int getId() {
         return id;
@@ -81,4 +118,10 @@ public class Movie {
     public void setPosterImage(String poster_image) {
         this.poster_image = poster_image;
     }
+
+    @Override
+    public int describeContents(){
+        return 0;
+    }
+
 }
