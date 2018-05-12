@@ -1,6 +1,7 @@
 package com.nverno.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -23,7 +24,8 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<List<Movie>> {
+        LoaderManager.LoaderCallbacks<List<Movie>>,
+        PosterAdapter.PosterAdapterOnClickHandler {
 
     private PosterAdapter mPosterAdapter;
     private RecyclerView mRecyclerView;
@@ -135,6 +137,16 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLoaderReset(Loader<List<Movie>> loader) {
 
+    }
+
+    @Override
+    public void onClick(Movie movieForDay) {
+        Context context = this;
+        Class destinationClass = DetailActivity.class;
+        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
+
+        intentToStartDetailActivity.putExtra("MOVIE", movieForDay);
+        startActivity(intentToStartDetailActivity);
     }
 
     @Override
