@@ -14,6 +14,7 @@ public class Movie implements Parcelable {
     private String poster_image;
     private static final String poster_url = "https://image.tmdb.org/t/p/w500";
 
+    // Constructor for object creation.
     public Movie(int id,
                  String title,
                  String poster_path,
@@ -29,7 +30,8 @@ public class Movie implements Parcelable {
         this.poster_image = poster_url + poster_path;
     }
 
-    public Movie(Parcel in) {
+    // Constructor for Parcelable, for passing object data through intents.
+    private Movie(Parcel in) {
         this.id = in.readInt();
         this.title = in.readString();
         this.poster_path = in.readString();
@@ -54,7 +56,6 @@ public class Movie implements Parcelable {
         public Movie createFromParcel(Parcel in) {
             return new Movie(in);
         }
-
         public Movie[] newArray(int size) {
             return new Movie[size];
         }
@@ -116,6 +117,7 @@ public class Movie implements Parcelable {
         this.poster_image = poster_image;
     }
 
+    // Need to override this if you are implementing Parcelable.
     @Override
     public int describeContents(){
         return 0;
