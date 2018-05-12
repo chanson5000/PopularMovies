@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URL;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -34,7 +33,7 @@ public class UnitTests {
     // I think it is clear that I need to work on my unit testing...
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         id = 278;
         original_title = "The Shawshank Redemption";
         poster_path = "/9O7gLzmreU0nGkIB6K3BsJbzvNv.jpg";
@@ -51,7 +50,7 @@ public class UnitTests {
     }
 
     @Test
-    public void MovieClass_addedObject() throws Exception {
+    public void MovieClass_addedObject() {
         assertNotNull(movie);
         assertEquals(movie.getId(), id);
         assertEquals(movie.getTitle(), original_title);

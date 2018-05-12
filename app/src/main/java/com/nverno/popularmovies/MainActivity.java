@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @BindView(R.id.recycler_view_posters) RecyclerView mRecyclerView;
 
-    LoaderManager.LoaderCallbacks<List<Movie>> mCallback;
+    private LoaderManager.LoaderCallbacks<List<Movie>> mCallback;
 
     // To identify our loader type. (only using one, anyway)
     private static final int POSTER_LOADER = 0;
@@ -101,9 +101,7 @@ public class MainActivity extends AppCompatActivity implements
                 try {
                     String jsonResponse = Network.fetchHttpsResponse(requestUrl);
 
-                    List<Movie> movies = JsonParse.topRatedResults(jsonResponse);
-
-                    return movies;
+                    return JsonParse.topRatedResults(jsonResponse);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return null;

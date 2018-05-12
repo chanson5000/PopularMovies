@@ -4,7 +4,6 @@ import android.net.Uri;
 
 import com.nverno.popularmovies.model.Movie;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
