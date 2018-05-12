@@ -25,11 +25,13 @@ public class UnitTests {
     private String overview;
     private double vote_average;
     private String release_date;
-    private static final String poster_url = "https://image.tmdb.org/t/p/w185";
+    private static final String poster_url = "https://image.tmdb.org/t/p/w500";
     private static final String MOVIEDB_BASE_URL = "https://api.themoviedb.org/3/";
     private static final String TOP_RATED = "movie/top_rated";
     private static final String AUTH_STRING = "?api_key=";
     private static final String AUTH = AUTH_STRING + MovieDb.API_KEY;
+
+    // I think it is clear that I need to work on my unit testing...
 
     @Before
     public void setUp() throws Exception {
@@ -46,7 +48,6 @@ public class UnitTests {
                 overview,
                 vote_average,
                 release_date);
-
     }
 
     @Test
@@ -64,25 +65,9 @@ public class UnitTests {
     @Test
     public void fetchHttp_returnDataString() throws Exception {
         URL url = new URL(MOVIEDB_BASE_URL + TOP_RATED + AUTH);
-        String response = Network.fetchHttp(url);
+        String response = Network.fetchHttpsResponse(url);
         System.out.print(response);
 
         assertNotNull(response);
-    }
-
-    @Test
-    public void getTopRated_returnListOfMovies() {
-        List<Movie> topRateResults = MovieDb.getTopRated();
-
-        int len = topRateResults.size();
-        for (int i = 0; i < len; i++) {
-            System.out.println("---------------");
-            System.out.println("Title: " + topRateResults.get(i).getTitle());
-            System.out.println("Poster path: " + topRateResults.get(i).getPosterImage());
-            System.out.println("Overview: " + topRateResults.get(i).getOverview());
-            System.out.println("Vote Average: " + topRateResults.get(i).getVoteAverage());
-            System.out.println("Release date: " + topRateResults.get(i).getReleaseDate());
-        }
-        assertNotNull(topRateResults);
     }
 }
