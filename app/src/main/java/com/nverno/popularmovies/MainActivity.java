@@ -69,15 +69,6 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    /**
-     * Called by the {@link android.support.v4.app.LoaderManagerImpl} when a new Loader needs to be
-     * created. This Activity only uses one loader, so we don't necessarily NEED to check the
-     * loaderId, but this is certainly best practice.
-     *
-     * @param id The loader ID for which we need to create a loader
-     * @param bundle   Any arguments supplied by the caller
-     * @return A new Loader instance that is ready to start loading.
-     */
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, Bundle bundle) {
 
