@@ -13,6 +13,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdapterViewHolder> {
 
     private Context mContext;
@@ -29,11 +32,11 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdap
     }
 
     class PosterAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView posterView;
+        @BindView(R.id.movie_poster) ImageView posterView;
 
         PosterAdapterViewHolder(View view) {
             super(view);
-            posterView = view.findViewById(R.id.movie_poster);
+            ButterKnife.bind(this, posterView);
             view.setOnClickListener(this);
         }
 
@@ -65,13 +68,11 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdap
     }
 
 
-
     @Override
     public int getItemCount() {
         if (movies == null) return 0;
         return movies.size();
     }
-
 
     public void setPosterData(List<Movie> data) {
         movies = data;
