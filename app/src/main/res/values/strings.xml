@@ -3,5 +3,7 @@
     <string name="action_setting">Action Setting</string>
     <string name="poster_image_content_description">Movie poster</string>
     <string name="loading_message">Loading</string>
+    <string name="rating">User Rating</string>
+    <string name="release_date">Release Date</string>
 </resources>
 
