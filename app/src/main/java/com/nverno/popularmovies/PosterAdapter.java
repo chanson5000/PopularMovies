@@ -1,7 +1,6 @@
 package com.nverno.popularmovies;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +28,7 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdap
     }
 
     class PosterAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView posterView;
+        final ImageView posterView;
 
         PosterAdapterViewHolder(View view) {
             super(view);
