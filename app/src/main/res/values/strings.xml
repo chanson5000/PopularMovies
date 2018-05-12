@@ -5,5 +5,8 @@
     <string name="loading_message">Loading</string>
     <string name="rating">User Rating</string>
     <string name="release_date">Release Date</string>
+    <string name="sort_by">Sort By</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="most_popular">Most Popular</string>
 </resources>
 
