@@ -9,20 +9,20 @@ import android.util.Log;
 import com.nverno.popularmovies.model.Movie;
 
 @Database(entities = {Movie.class}, version = 1, exportSchema = false)
-public abstract class MovieDatabase extends RoomDatabase {
+public abstract class MovieTopRatedDatabase extends RoomDatabase {
 
-    private static final String LOG_TAG = MovieDatabase.class.getSimpleName();
+    private static final String LOG_TAG = MovieTopRatedDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();
-    private static final String DATABASE_NAME = "moviedbdata";
-    private static MovieDatabase sInstance;
+    private static final String DATABASE_NAME = "movie_top_rated_data";
+    private static MovieTopRatedDatabase sInstance;
 
-    public static MovieDatabase getsInstance(Context context) {
+    public static MovieTopRatedDatabase getInstance(Context context) {
         // If a database does not exist, create one.
         if (sInstance == null) {
             synchronized (LOCK) {
                 Log.d(LOG_TAG, "Creating a new database instance");
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
-                        MovieDatabase.class, MovieDatabase.DATABASE_NAME)
+                        MovieTopRatedDatabase.class, MovieTopRatedDatabase.DATABASE_NAME)
                         .build();
             }
         }
