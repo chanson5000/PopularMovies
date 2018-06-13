@@ -1,7 +1,11 @@
 package com.nverno.popularmovies.model;
 
+import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,13 +14,26 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+@Entity(tableName = "movie")
 public class Movie implements Parcelable {
 
+    @SerializedName("id")
+    @Expose
     private int id;
+    @SerializedName("title")
+    @Expose
     private String title;
+    @SerializedName("poster_path")
+    @Expose
     private String poster_path;
+    @SerializedName("overview")
+    @Expose
     private String overview;
+    @SerializedName("vote_average")
+    @Expose
     private double vote_average;
+    @SerializedName("release_date")
+    @Expose
     private String release_date;
     private String poster_image;
     private List<String> trailers;
@@ -29,9 +46,7 @@ public class Movie implements Parcelable {
                  String poster_path,
                  String overview,
                  double vote_average,
-                 String release_date,
-                 List<String> trailers,
-                 List<String> reviews) {
+                 String release_date) {
         this.id = id;
         this.title = title;
         this.poster_path = poster_path;
@@ -86,6 +101,7 @@ public class Movie implements Parcelable {
         public Movie createFromParcel(Parcel in) {
             return new Movie(in);
         }
+
         public Movie[] newArray(int size) {
             return new Movie[size];
         }
@@ -165,7 +181,7 @@ public class Movie implements Parcelable {
 
     // Need to override this if you are implementing Parcelable.
     @Override
-    public int describeContents(){
+    public int describeContents() {
         return 0;
     }
 
