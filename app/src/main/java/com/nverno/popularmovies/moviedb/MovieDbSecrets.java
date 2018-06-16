@@ -1,6 +1,6 @@
-package com.nverno.popularmovies.util;
+package com.nverno.popularmovies.moviedb;
 
-public interface MovieDbSecrets {
+interface MovieDbSecrets {
     // Insert your TheMovieDb.Org API key here.
     String API_KEY = "Your API Key";
 }
