@@ -23,7 +23,8 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdap
         void onClick(Movie movieForDay);
     }
 
-    public PosterAdapter(PosterAdapterOnClickHandler clickHandler) {
+    public PosterAdapter(Context context, PosterAdapterOnClickHandler clickHandler) {
+        mContext = context;
         mClickHandler = clickHandler;
     }
 
@@ -47,7 +48,6 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdap
 
     @Override
     public PosterAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        mContext = viewGroup.getContext();
         int layoutId = R.layout.poster_list_item;
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
@@ -63,14 +63,11 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdap
         Picasso.with(mContext).load(movies.get(position).getPosterImage()).into(posterAdapterViewHolder.posterView);
     }
 
-
-
     @Override
     public int getItemCount() {
         if (movies == null) return 0;
         return movies.size();
     }
-
 
     public void setPosterData(List<Movie> data) {
         movies = data;
