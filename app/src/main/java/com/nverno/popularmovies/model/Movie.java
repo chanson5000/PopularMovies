@@ -17,28 +17,31 @@ import java.util.Locale;
 @Entity(tableName = "movie")
 public class Movie implements Parcelable {
 
-    @SerializedName("id")
+    // This is the base url we will use to fetch poster image urls.
+    private static final String base_poster_url = "https://image.tmdb.org/t/p/w500";
+
+    // Note: Serialization (Java to JSON), Deserialization (JSON to Java)
+    // @SerializedName("field") sets the annotation of the JSON fields we fetch from the API.
+    // With my fields being the same as my private variables, it is not needed.
+    // With @Expose(serialization = false) we can also set whether we (de)serialize or not.
+
+    // Serialize and Expose for use with retrofit2
     @Expose
     private int id;
-    @SerializedName("title")
     @Expose
     private String title;
-    @SerializedName("poster_path")
     @Expose
     private String poster_path;
-    @SerializedName("overview")
     @Expose
     private String overview;
-    @SerializedName("vote_average")
     @Expose
     private double vote_average;
-    @SerializedName("release_date")
     @Expose
     private String release_date;
-    private String poster_image;
+
+    // TODO: Implement these as properties.
     private List<String> trailers;
     private List<String> reviews;
-    private static final String poster_url = "https://image.tmdb.org/t/p/w500";
 
     // Constructor for object creation.
     public Movie(int id,
@@ -47,15 +50,13 @@ public class Movie implements Parcelable {
                  String overview,
                  double vote_average,
                  String release_date) {
+
         this.id = id;
         this.title = title;
         this.poster_path = poster_path;
         this.overview = overview;
         this.vote_average = vote_average;
         this.release_date = release_date;
-        this.poster_image = poster_url + poster_path;
-        this.trailers = trailers;
-        this.reviews = reviews;
     }
 
     // Constructor for Parcelable, for passing object data through intents.
@@ -66,22 +67,13 @@ public class Movie implements Parcelable {
         this.overview = in.readString();
         this.vote_average = in.readDouble();
         this.release_date = in.readString();
-        this.poster_image = in.readString();
+
         // Need to create a new list before reading from the stream.
+        // TODO: These currently have no data.
         this.trailers = new ArrayList<>();
         in.readStringList(this.trailers);
         this.reviews = new ArrayList<>();
         in.readStringList(this.reviews);
-    }
-
-    private String ConvertDateFormat(String oldFormat) {
-        try {
-            Date date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(oldFormat);
-            return new SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return oldFormat;
     }
 
     @Override
@@ -92,7 +84,6 @@ public class Movie implements Parcelable {
         dest.writeString(this.overview);
         dest.writeDouble(this.vote_average);
         dest.writeString(this.release_date);
-        dest.writeString(this.poster_image);
         dest.writeStringList(this.trailers);
         dest.writeStringList(this.reviews);
     }
@@ -106,6 +97,17 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    private String ConvertDateFormat(String oldFormat) {
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(oldFormat);
+            return new SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        // Just return us the old format if it doesn't work out!
+        return oldFormat;
+    }
 
     public int getId() {
         return id;
@@ -155,12 +157,11 @@ public class Movie implements Parcelable {
         this.release_date = release_date;
     }
 
+    // Our poster image url is not relying on any private variables.
+    // API calls with retrofit2 did not seem to initialize constructor that would originally
+    // assign the private variable that would have been accessed here. This works.
     public String getPosterImage() {
-        return poster_image;
-    }
-
-    public void setPosterImage(String poster_image) {
-        this.poster_image = poster_image;
+        return base_poster_url + poster_path;
     }
 
     public List<String> getTrailers() {
