@@ -11,6 +11,7 @@ public class Review {
     @Expose
     private String content;
 
+
     public String getAuthor() {
         return author;
     }
