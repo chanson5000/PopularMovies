@@ -3,6 +3,7 @@ package com.nverno.popularmovies.viewmodel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 
@@ -15,6 +16,7 @@ import com.nverno.popularmovies.moviedb.MovieDbApi;
 
 import java.util.List;
 
+import io.reactivex.annotations.Nullable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -61,12 +63,6 @@ public class MoviesViewModel extends ViewModel {
         return mPopularMovies;
     }
 
-    private void loadReviews(List<Movie> movies) {
-
-
-
-    }
-
     private void loadTopRatedMovies() {
 
         Call<MovieResult> call = movieDb.topRatedMovies();
@@ -80,6 +76,8 @@ public class MoviesViewModel extends ViewModel {
 
                 for (final Movie currentMovie : movies) {
                     Call<ReviewResult> reviewCall = movieDb.reviews(currentMovie.getId());
+                    Call<TrailerResult> trailerCall = movieDb.trailers(currentMovie.getId());
+
 
                     reviewCall.enqueue(new Callback<ReviewResult>() {
                         @Override
@@ -92,10 +90,6 @@ public class MoviesViewModel extends ViewModel {
 
                         }
                     });
-                }
-
-                for (final Movie currentMovie : movies) {
-                    Call<TrailerResult> trailerCall = movieDb.trailers(currentMovie.getId());
 
                     trailerCall.enqueue(new Callback<TrailerResult>() {
                         @Override
@@ -110,7 +104,7 @@ public class MoviesViewModel extends ViewModel {
                     });
                 }
 
-                mTopRatedMovies.setValue();
+                mTopRatedMovies.setValue(movies);
             }
 
             @Override
@@ -128,7 +122,39 @@ public class MoviesViewModel extends ViewModel {
             @Override
             public void onResponse(Call<MovieResult> call, Response<MovieResult> response) {
                 // Our results object contains a list of movie objects.
-                mPopularMovies.setValue(response.body().GetMovies());
+
+                List<Movie> movies = response.body().GetMovies();
+
+                for (final Movie currentMovie : movies) {
+                    Call<ReviewResult> reviewCall = movieDb.reviews(currentMovie.getId());
+                    Call<TrailerResult> trailerCall = movieDb.trailers(currentMovie.getId());
+
+                    reviewCall.enqueue(new Callback<ReviewResult>() {
+                        @Override
+                        public void onResponse(Call<ReviewResult> reviewCall, Response<ReviewResult> response) {
+                            currentMovie.setReviews(response.body().GetReviews());
+                        }
+
+                        @Override
+                        public void onFailure(Call<ReviewResult> reviewCall, Throwable t) {
+
+                        }
+                    });
+
+                    trailerCall.enqueue(new Callback<TrailerResult>() {
+                        @Override
+                        public void onResponse(Call<TrailerResult> call, Response<TrailerResult> response) {
+                            currentMovie.setTrailers(response.body().GetTrailers());
+                        }
+
+                        @Override
+                        public void onFailure(Call<TrailerResult> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+                mPopularMovies.setValue(movies);
             }
 
             @Override
