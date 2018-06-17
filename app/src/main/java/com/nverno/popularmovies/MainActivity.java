@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.viewmodel.MoviesViewModel;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements
     private PosterAdapter mPosterAdapter;
 
     @BindView(R.id.recycler_view_posters) RecyclerView mRecyclerView;
+    @BindView(R.id.main_activity_progress_bar) ProgressBar mLoadingSpinner;
 
     // To identify our sort types.
     private static final int SORT_MOST_POPULAR = 0;
@@ -45,6 +48,10 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        if (mLoadingSpinner.getVisibility() == View.INVISIBLE) {
+            mLoadingSpinner.setVisibility(View.VISIBLE);
+        }
 
         // Using the GridLayoutManager with 2 columns.
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
@@ -71,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
                 Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
+                mLoadingSpinner.setVisibility(View.INVISIBLE);
                 mPosterAdapter.setPosterData(movies);
             }
         });
