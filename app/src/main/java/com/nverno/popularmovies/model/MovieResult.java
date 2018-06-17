@@ -10,7 +10,6 @@ import java.util.Objects;
 // This class is purely for returning results from our retrofit2 API calls.
 public class MovieResult {
 
-    @SerializedName("results")
     @Expose
     private List<Movie> results;
 
