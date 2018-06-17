@@ -5,7 +5,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -67,13 +66,6 @@ public class Movie implements Parcelable {
         this.overview = in.readString();
         this.vote_average = in.readDouble();
         this.release_date = in.readString();
-
-        // Need to create a new list before reading from the stream.
-        // TODO: These currently have no data.
-        this.trailers = new ArrayList<>();
-        in.readd(this.trailers.toString());
-        this.reviews = new ArrayList<>();
-        in.readBundle(this.reviews);
     }
 
     @Override
@@ -84,8 +76,6 @@ public class Movie implements Parcelable {
         dest.writeString(this.overview);
         dest.writeDouble(this.vote_average);
         dest.writeString(this.release_date);
-        dest.writeStringList(this.trailers);
-        dest.writeTypedArray(this.reviews);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
