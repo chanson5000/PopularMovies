@@ -7,7 +7,7 @@ import android.util.Log;
 
 
 import com.nverno.popularmovies.model.Movie;
-import com.nverno.popularmovies.model.Results;
+import com.nverno.popularmovies.model.MovieResult;
 import com.nverno.popularmovies.moviedb.MovieDbApi;
 
 import java.util.List;
@@ -54,17 +54,17 @@ public class MoviesViewModel extends ViewModel {
 
         MovieDbApi movieDb = retrofit.create(MovieDbApi.class);
 
-        Call<Results> call = movieDb.topRatedMovies();
+        Call<MovieResult> call = movieDb.topRatedMovies();
 
-        call.enqueue(new Callback<Results>() {
+        call.enqueue(new Callback<MovieResult>() {
             @Override
-            public void onResponse(Call<Results> call, Response<Results> response) {
+            public void onResponse(Call<MovieResult> call, Response<MovieResult> response) {
                 // Our results object contains a list of movie objects.
                 mTopRatedMovies.setValue(response.body().GetMovies());
             }
 
             @Override
-            public void onFailure(Call<Results> call, Throwable t) {
+            public void onFailure(Call<MovieResult> call, Throwable t) {
                 Log.e(LOG_TAG, "loadTopRatedMovies failed.");
             }
         });
@@ -78,17 +78,17 @@ public class MoviesViewModel extends ViewModel {
 
         MovieDbApi movieDb = retrofit.create(MovieDbApi.class);
 
-        Call<Results> call = movieDb.popularMovies();
+        Call<MovieResult> call = movieDb.popularMovies();
 
-        call.enqueue(new Callback<Results>() {
+        call.enqueue(new Callback<MovieResult>() {
             @Override
-            public void onResponse(Call<Results> call, Response<Results> response) {
+            public void onResponse(Call<MovieResult> call, Response<MovieResult> response) {
                 // Our results object contains a list of movie objects.
                 mPopularMovies.setValue(response.body().GetMovies());
             }
 
             @Override
-            public void onFailure(Call<Results> call, Throwable t) {
+            public void onFailure(Call<MovieResult> call, Throwable t) {
                 Log.e(LOG_TAG, "loadPopularMovies failed.");
             }
         });
