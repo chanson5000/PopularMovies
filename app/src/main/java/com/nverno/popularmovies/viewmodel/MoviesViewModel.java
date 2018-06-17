@@ -137,7 +137,7 @@ public class MoviesViewModel extends ViewModel {
 
                         @Override
                         public void onFailure(Call<ReviewResult> reviewCall, Throwable t) {
-
+                            Log.e(LOG_TAG, "loadReviews failed.");
                         }
                     });
 
@@ -149,7 +149,7 @@ public class MoviesViewModel extends ViewModel {
 
                         @Override
                         public void onFailure(Call<TrailerResult> call, Throwable t) {
-
+                            Log.e(LOG_TAG, "loadTrailers failed.");
                         }
                     });
                 }
