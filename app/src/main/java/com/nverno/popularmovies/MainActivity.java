@@ -1,43 +1,39 @@
 package com.nverno.popularmovies;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.nverno.popularmovies.model.Movie;
-import com.nverno.popularmovies.util.JsonParse;
-import com.nverno.popularmovies.util.MovieDb;
-import com.nverno.popularmovies.util.Network;
+import com.nverno.popularmovies.viewmodel.MoviesViewModel;
 
-import java.net.URL;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<List<Movie>>,
         PosterAdapter.PosterAdapterOnClickHandler {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private PosterAdapter mPosterAdapter;
 
     @BindView(R.id.recycler_view_posters) RecyclerView mRecyclerView;
-
-    private LoaderManager.LoaderCallbacks<List<Movie>> mCallback;
-
-    // To identify our loader type. (only using one, anyway)
-    private static final int POSTER_LOADER = 0;
+    @BindView(R.id.main_activity_progress_bar) ProgressBar mLoadingSpinner;
 
     // To identify our sort types.
-    private static final int SORT_MOST_POPULAR = 0;
+    private static final int SORT_POPULAR = 0;
     private static final int SORT_TOP_RATED = 1;
 
     // A persistent way to keep track of our sort type.
@@ -46,12 +42,19 @@ public class MainActivity extends AppCompatActivity implements
     // To identify that we are moving movie data through an intent.
     private static final String INTENT_MOVIE_DATA = "MOVIE";
 
-    @Override
+    MoviesViewModel moviesViewModel;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        moviesViewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
+
+        if (mLoadingSpinner.getVisibility() == View.INVISIBLE) {
+            mLoadingSpinner.setVisibility(View.VISIBLE);
+        }
 
         // Using the GridLayoutManager with 2 columns.
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
@@ -63,68 +66,43 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.setHasFixedSize(true);
 
         // The PosterAdapter links our poster images with the views that display them.
-        mPosterAdapter = new PosterAdapter(this);
+        mPosterAdapter = new PosterAdapter(this,this);
 
         // Set the adapter, attaching it to the RecyclerView in the layout.
         mRecyclerView.setAdapter(mPosterAdapter);
 
-        mCallback = MainActivity.this;
-        getSupportLoaderManager().initLoader(POSTER_LOADER, null, mCallback);
-
+        initializeMoviesViewModel();
     }
 
-    @Override
-    public Loader<List<Movie>> onCreateLoader(int id, Bundle bundle) {
+    private void setPopularMoviesView() {
 
-        return new AsyncTaskLoader<List<Movie>>(this) {
-
-            List<Movie> posterData = null;
-
+        moviesViewModel.getPopularMovies().observe(this, new Observer<List<Movie>>() {
             @Override
-            public void onStartLoading() {
-                if (posterData != null) {
-                    deliverResult(posterData);
-                } else {
-                    forceLoad();
-                }
+            public void onChanged(@Nullable List<Movie> movies) {
+                mLoadingSpinner.setVisibility(View.INVISIBLE);
+                mPosterAdapter.setPosterData(movies);
             }
+        });
+    }
 
+    private void setTopRatedMoviesView() {
+
+        moviesViewModel.getTopRatedMovies().observe(this, new Observer<List<Movie>>() {
             @Override
-            public List<Movie> loadInBackground() {
-                URL requestUrl;
-                if (sMovieSortType == SORT_TOP_RATED) {
-                    requestUrl = MovieDb.getTopRatedUrl();
-                } else {
-                    requestUrl = MovieDb.getPopularUrl();
-                }
-
-                try {
-                    String jsonResponse = Network.fetchHttpsResponse(requestUrl);
-
-                    return JsonParse.topRatedResults(jsonResponse);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
+            public void onChanged(@Nullable List<Movie> movies) {
+                mLoadingSpinner.setVisibility(View.INVISIBLE);
+                mPosterAdapter.setPosterData(movies);
             }
-
-            public void deliverResult(List<Movie> data) {
-                posterData = data;
-                super.deliverResult(data);
-            }
-        };
+        });
     }
 
-    // When our AsyncTask finishes loading, we can set the data into the PosterAdapter.
-    @Override
-    public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> data) {
-        mPosterAdapter.setPosterData(data);
-    }
+    private void initializeMoviesViewModel() {
 
-    // I don't think I needed to use this yet, but I have to override it...
-    @Override
-    public void onLoaderReset(Loader<List<Movie>> loader) {
-
+        if (sMovieSortType == SORT_POPULAR) {
+            setPopularMoviesView();
+        } else {
+            setTopRatedMoviesView();
+        }
     }
 
     @Override
@@ -162,22 +140,24 @@ public class MainActivity extends AppCompatActivity implements
             // If sort by most popular has been clicked...
             case R.id.sort_by_most_popular:
                 // and the sort type is not already "most popular"
-                if (sMovieSortType != SORT_MOST_POPULAR) {
+                if (sMovieSortType != SORT_POPULAR) {
+                    mLoadingSpinner.setVisibility(View.VISIBLE);
                     // set the sort type to "most popular"
-                    sMovieSortType = SORT_MOST_POPULAR;
+                    sMovieSortType = SORT_POPULAR;
                     // set that item as checked.
                     item.setChecked(true);
-                    // restart the loader to refresh the poster sort type
-                    getSupportLoaderManager().restartLoader(POSTER_LOADER, null, mCallback);
+                    // Set the view
+                    initializeMoviesViewModel();
                 }
                 return true;
 
                 // Every thing like above, but the opposite.
             case R.id.sort_by_top_rated:
                 if (sMovieSortType != SORT_TOP_RATED) {
+                    mLoadingSpinner.setVisibility(View.VISIBLE);
                     sMovieSortType = SORT_TOP_RATED;
                     item.setChecked(true);
-                    getSupportLoaderManager().restartLoader(POSTER_LOADER, null, mCallback);
+                    initializeMoviesViewModel();
                 }
                 return true;
 
