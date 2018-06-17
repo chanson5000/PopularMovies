@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.main_activity_progress_bar) ProgressBar mLoadingSpinner;
 
     // To identify our sort types.
-    private static final int SORT_MOST_POPULAR = 0;
+    private static final int SORT_POPULAR = 0;
     private static final int SORT_TOP_RATED = 1;
 
     // A persistent way to keep track of our sort type.
@@ -119,9 +119,9 @@ public class MainActivity extends AppCompatActivity implements
             // If sort by most popular has been clicked...
             case R.id.sort_by_most_popular:
                 // and the sort type is not already "most popular"
-                if (sMovieSortType != SORT_MOST_POPULAR) {
+                if (sMovieSortType != SORT_POPULAR) {
                     // set the sort type to "most popular"
-                    sMovieSortType = SORT_MOST_POPULAR;
+                    sMovieSortType = SORT_POPULAR;
                     // set that item as checked.
                     item.setChecked(true);
                     // restart the loader to refresh the poster sort type
