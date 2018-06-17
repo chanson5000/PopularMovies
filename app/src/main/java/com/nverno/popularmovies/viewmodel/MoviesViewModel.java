@@ -8,6 +8,9 @@ import android.util.Log;
 
 import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.model.MovieResult;
+import com.nverno.popularmovies.model.Review;
+import com.nverno.popularmovies.model.ReviewResult;
+import com.nverno.popularmovies.model.TrailerResult;
 import com.nverno.popularmovies.moviedb.MovieDbApi;
 
 import java.util.List;
@@ -25,6 +28,18 @@ public class MoviesViewModel extends ViewModel {
 
     private MutableLiveData<List<Movie>> mTopRatedMovies;
     private MutableLiveData<List<Movie>> mPopularMovies;
+
+    private Retrofit retrofit;
+    private MovieDbApi movieDb;
+
+    public MoviesViewModel() {
+        retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.themoviedb.org/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        movieDb = retrofit.create(MovieDbApi.class);
+    }
 
     public LiveData<List<Movie>> getTopRatedMovies() {
         if (mTopRatedMovies == null) {
@@ -46,13 +61,13 @@ public class MoviesViewModel extends ViewModel {
         return mPopularMovies;
     }
 
-    private void loadTopRatedMovies() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    private void loadReviews(List<Movie> movies) {
 
-        MovieDbApi movieDb = retrofit.create(MovieDbApi.class);
+
+
+    }
+
+    private void loadTopRatedMovies() {
 
         Call<MovieResult> call = movieDb.topRatedMovies();
 
@@ -60,7 +75,42 @@ public class MoviesViewModel extends ViewModel {
             @Override
             public void onResponse(Call<MovieResult> call, Response<MovieResult> response) {
                 // Our results object contains a list of movie objects.
-                mTopRatedMovies.setValue(response.body().GetMovies());
+
+                List<Movie> movies = response.body().GetMovies();
+
+                for (final Movie currentMovie : movies) {
+                    Call<ReviewResult> reviewCall = movieDb.reviews(currentMovie.getId());
+
+                    reviewCall.enqueue(new Callback<ReviewResult>() {
+                        @Override
+                        public void onResponse(Call<ReviewResult> reviewCall, Response<ReviewResult> response) {
+                            currentMovie.setReviews(response.body().GetReviews());
+                        }
+
+                        @Override
+                        public void onFailure(Call<ReviewResult> reviewCall, Throwable t) {
+
+                        }
+                    });
+                }
+
+                for (final Movie currentMovie : movies) {
+                    Call<TrailerResult> trailerCall = movieDb.trailers(currentMovie.getId());
+
+                    trailerCall.enqueue(new Callback<TrailerResult>() {
+                        @Override
+                        public void onResponse(Call<TrailerResult> call, Response<TrailerResult> response) {
+                            currentMovie.setTrailers(response.body().GetTrailers());
+                        }
+
+                        @Override
+                        public void onFailure(Call<TrailerResult> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+                mTopRatedMovies.setValue();
             }
 
             @Override
@@ -71,12 +121,6 @@ public class MoviesViewModel extends ViewModel {
     }
 
     private void loadPopularMovies() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        MovieDbApi movieDb = retrofit.create(MovieDbApi.class);
 
         Call<MovieResult> call = movieDb.popularMovies();
 
