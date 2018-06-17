@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,11 +42,15 @@ public class MainActivity extends AppCompatActivity implements
     // To identify that we are moving movie data through an intent.
     private static final String INTENT_MOVIE_DATA = "MOVIE";
 
+    MoviesViewModel moviesViewModel;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        moviesViewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
 
         if (mLoadingSpinner.getVisibility() == View.INVISIBLE) {
             mLoadingSpinner.setVisibility(View.VISIBLE);
@@ -71,17 +74,35 @@ public class MainActivity extends AppCompatActivity implements
         initializeMoviesViewModel();
     }
 
-    private void initializeMoviesViewModel() {
-        MoviesViewModel viewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
+    private void setPopularMoviesView() {
 
-        viewModel.getTopRatedMovies().observe(this, new Observer<List<Movie>>() {
+        moviesViewModel.getPopularMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
                 mLoadingSpinner.setVisibility(View.INVISIBLE);
                 mPosterAdapter.setPosterData(movies);
             }
         });
+    }
+
+    private void setTopRatedMoviesView() {
+
+        moviesViewModel.getTopRatedMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                mLoadingSpinner.setVisibility(View.INVISIBLE);
+                mPosterAdapter.setPosterData(movies);
+            }
+        });
+    }
+
+    private void initializeMoviesViewModel() {
+
+        if (sMovieSortType == SORT_POPULAR) {
+            setPopularMoviesView();
+        } else {
+            setTopRatedMoviesView();
+        }
     }
 
     @Override
@@ -120,19 +141,23 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.sort_by_most_popular:
                 // and the sort type is not already "most popular"
                 if (sMovieSortType != SORT_POPULAR) {
+                    mLoadingSpinner.setVisibility(View.VISIBLE);
                     // set the sort type to "most popular"
                     sMovieSortType = SORT_POPULAR;
                     // set that item as checked.
                     item.setChecked(true);
-                    // restart the loader to refresh the poster sort type
+                    // Set the view
+                    initializeMoviesViewModel();
                 }
                 return true;
 
                 // Every thing like above, but the opposite.
             case R.id.sort_by_top_rated:
                 if (sMovieSortType != SORT_TOP_RATED) {
+                    mLoadingSpinner.setVisibility(View.VISIBLE);
                     sMovieSortType = SORT_TOP_RATED;
                     item.setChecked(true);
+                    initializeMoviesViewModel();
                 }
                 return true;
 
