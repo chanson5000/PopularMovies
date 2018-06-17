@@ -23,16 +23,27 @@ public class MoviesViewModel extends ViewModel {
     // Constant for logging
     private static final String LOG_TAG = MoviesViewModel.class.getSimpleName();
 
-    private MutableLiveData<List<Movie>> mMovies;
+    private MutableLiveData<List<Movie>> mTopRatedMovies;
+    private MutableLiveData<List<Movie>> mPopularMovies;
 
     public LiveData<List<Movie>> getTopRatedMovies() {
-        if (mMovies == null) {
-            mMovies = new MutableLiveData<>();
+        if (mTopRatedMovies == null) {
+            mTopRatedMovies = new MutableLiveData<>();
 
             loadTopRatedMovies();
         }
 
-        return mMovies;
+        return mTopRatedMovies;
+    }
+
+    public LiveData<List<Movie>> getPopularMovies() {
+        if (mPopularMovies == null) {
+            mPopularMovies = new MutableLiveData<>();
+
+            loadPopularMovies();
+        }
+
+        return mPopularMovies;
     }
 
     private void loadTopRatedMovies() {
@@ -49,12 +60,36 @@ public class MoviesViewModel extends ViewModel {
             @Override
             public void onResponse(Call<Results> call, Response<Results> response) {
                 // Our results object contains a list of movie objects.
-                mMovies.setValue(response.body().GetMovies());
+                mTopRatedMovies.setValue(response.body().GetMovies());
             }
 
             @Override
             public void onFailure(Call<Results> call, Throwable t) {
                 Log.e(LOG_TAG, "loadTopRatedMovies failed.");
+            }
+        });
+    }
+
+    private void loadPopularMovies() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.themoviedb.org/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MovieDbApi movieDb = retrofit.create(MovieDbApi.class);
+
+        Call<Results> call = movieDb.popularMovies();
+
+        call.enqueue(new Callback<Results>() {
+            @Override
+            public void onResponse(Call<Results> call, Response<Results> response) {
+                // Our results object contains a list of movie objects.
+                mPopularMovies.setValue(response.body().GetMovies());
+            }
+
+            @Override
+            public void onFailure(Call<Results> call, Throwable t) {
+                Log.e(LOG_TAG, "loadPopularMovies failed.");
             }
         });
     }
