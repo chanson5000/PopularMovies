@@ -120,13 +120,13 @@ public class Movie {
         this.title = title;
     }
 
-//    public String getPosterPath() {
-//        return poster_path;
-//    }
-//
-//    public void setPosterPath(String poster_path) {
-//        this.poster_path = poster_path;
-//    }
+    public String getPosterPath() {
+        return poster_path;
+    }
+
+    public void setPosterPath(String poster_path) {
+        this.poster_path = poster_path;
+    }
 
     public String getOverview() {
         return overview;
@@ -135,22 +135,22 @@ public class Movie {
     public void setOverview(String overview) {
         this.overview = overview;
     }
-//
-//    public double getVoteAverage() {
-//        return vote_average;
-//    }
-//
-//    public void setVoteAverage(double vote_average) {
-//        this.vote_average = vote_average;
-//    }
-//
-//    public String getReleaseDate() {
-//        return ConvertDateFormat(release_date);
-//    }
-//
-//    public void setReleaseDate(String release_date) {
-//        this.release_date = release_date;
-//    }
+
+    public double getVoteAverage() {
+        return vote_average;
+    }
+
+    public void setVoteAverage(double vote_average) {
+        this.vote_average = vote_average;
+    }
+
+    public String getReleaseDate() {
+        return ConvertDateFormat(release_date);
+    }
+
+    public void setReleaseDate(String release_date) {
+        this.release_date = release_date;
+    }
 
     // Our poster image url is not relying on any private variables.
     // API calls with retrofit2 did not seem to initialize constructor that would originally
