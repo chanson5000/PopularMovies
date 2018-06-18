@@ -74,36 +74,6 @@ public class MoviesViewModel extends ViewModel {
 
                 List<Movie> movies = response.body().GetMovies();
 
-                for (final Movie currentMovie : movies) {
-                    Call<ReviewResult> reviewCall = movieDb.reviews(currentMovie.getId());
-                    Call<TrailerResult> trailerCall = movieDb.trailers(currentMovie.getId());
-
-
-                    reviewCall.enqueue(new Callback<ReviewResult>() {
-                        @Override
-                        public void onResponse(Call<ReviewResult> reviewCall, Response<ReviewResult> response) {
-                            currentMovie.setReviews(response.body().GetReviews());
-                        }
-
-                        @Override
-                        public void onFailure(Call<ReviewResult> reviewCall, Throwable t) {
-
-                        }
-                    });
-
-                    trailerCall.enqueue(new Callback<TrailerResult>() {
-                        @Override
-                        public void onResponse(Call<TrailerResult> call, Response<TrailerResult> response) {
-                            currentMovie.setTrailers(response.body().GetTrailers());
-                        }
-
-                        @Override
-                        public void onFailure(Call<TrailerResult> call, Throwable t) {
-
-                        }
-                    });
-                }
-
                 mTopRatedMovies.setValue(movies);
             }
 
@@ -124,35 +94,6 @@ public class MoviesViewModel extends ViewModel {
                 // Our results object contains a list of movie objects.
 
                 List<Movie> movies = response.body().GetMovies();
-
-                for (final Movie currentMovie : movies) {
-                    Call<ReviewResult> reviewCall = movieDb.reviews(currentMovie.getId());
-                    Call<TrailerResult> trailerCall = movieDb.trailers(currentMovie.getId());
-
-                    reviewCall.enqueue(new Callback<ReviewResult>() {
-                        @Override
-                        public void onResponse(Call<ReviewResult> reviewCall, Response<ReviewResult> response) {
-                            currentMovie.setReviews(response.body().GetReviews());
-                        }
-
-                        @Override
-                        public void onFailure(Call<ReviewResult> reviewCall, Throwable t) {
-                            Log.e(LOG_TAG, "loadReviews failed.");
-                        }
-                    });
-
-                    trailerCall.enqueue(new Callback<TrailerResult>() {
-                        @Override
-                        public void onResponse(Call<TrailerResult> call, Response<TrailerResult> response) {
-                            currentMovie.setTrailers(response.body().GetTrailers());
-                        }
-
-                        @Override
-                        public void onFailure(Call<TrailerResult> call, Throwable t) {
-                            Log.e(LOG_TAG, "loadTrailers failed.");
-                        }
-                    });
-                }
 
                 mPopularMovies.setValue(movies);
             }
