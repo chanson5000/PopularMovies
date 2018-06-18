@@ -113,8 +113,10 @@ public class MainActivity extends AppCompatActivity implements
         Class destinationClass = DetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
 
+
+
         // Pushing our parcelable movie data through the intent.
-        intentToStartDetailActivity.putExtra(INTENT_MOVIE_DATA, movieForDay);
+        intentToStartDetailActivity.putExtra(INTENT_MOVIE_DATA, movieForDay.getId());
 
         startActivity(intentToStartDetailActivity);
     }

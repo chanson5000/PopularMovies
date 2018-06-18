@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 // This class is purely for returning results from our retrofit2 API calls.
-public class Results {
+public class MovieResult {
 
-    @SerializedName("results")
     @Expose
     private List<Movie> results;
 

@@ -5,7 +5,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,8 +39,8 @@ public class Movie implements Parcelable {
     private String release_date;
 
     // TODO: Implement these as properties.
-    private List<String> trailers;
-    private List<String> reviews;
+    private List<Trailer> trailers;
+    private List<Review> reviews;
 
     // Constructor for object creation.
     public Movie(int id,
@@ -67,13 +66,6 @@ public class Movie implements Parcelable {
         this.overview = in.readString();
         this.vote_average = in.readDouble();
         this.release_date = in.readString();
-
-        // Need to create a new list before reading from the stream.
-        // TODO: These currently have no data.
-        this.trailers = new ArrayList<>();
-        in.readStringList(this.trailers);
-        this.reviews = new ArrayList<>();
-        in.readStringList(this.reviews);
     }
 
     @Override
@@ -84,8 +76,6 @@ public class Movie implements Parcelable {
         dest.writeString(this.overview);
         dest.writeDouble(this.vote_average);
         dest.writeString(this.release_date);
-        dest.writeStringList(this.trailers);
-        dest.writeStringList(this.reviews);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
@@ -164,19 +154,19 @@ public class Movie implements Parcelable {
         return base_poster_url + poster_path;
     }
 
-    public List<String> getTrailers() {
+    public List<Trailer> getTrailers() {
         return trailers;
     }
 
-    public void setTrailers(List<String> trailers) {
+    public void setTrailers(List<Trailer> trailers) {
         this.trailers = trailers;
     }
 
-    public List<String> getReviews() {
+    public List<Review> getReviews() {
         return reviews;
     }
 
-    public void setReviews(List<String> reviews) {
+    public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
 
