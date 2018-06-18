@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -75,8 +74,8 @@ public class DetailActivity extends AppCompatActivity {
                         Picasso.with(mContext).load(movie.getPosterImage()).into(moviePosterDetail);
 
                         movieTitleDetail.setText(movie.getTitle());
-                        movieRatingDetail.setText(Double.toString(movie.getVoteAverage()));
-                        movieReleaseDetail.setText(movie.getReleaseDate());
+                        movieRatingDetail.setText(Double.toString(movie.getVote_average()));
+                        movieReleaseDetail.setText(movie.getRelease_date());
                         movieDescriptionDetail.setText(movie.getOverview());
                     }
                 });
