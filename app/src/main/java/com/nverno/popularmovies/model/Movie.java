@@ -1,20 +1,20 @@
 package com.nverno.popularmovies.model;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 @Entity(tableName = "movie")
-public class Movie implements Parcelable {
+public class Movie {
 
     // This is the base url we will use to fetch poster image urls.
     private static final String base_poster_url = "https://image.tmdb.org/t/p/w500";
@@ -26,20 +26,53 @@ public class Movie implements Parcelable {
 
     // Serialize and Expose for use with retrofit2
     @Expose
+    @PrimaryKey
     private int id;
     @Expose
+    @ColumnInfo(name = "title")
     private String title;
+
+    public String getPoster_path() {
+        return poster_path;
+    }
+
+    public void setPoster_path(String poster_path) {
+        this.poster_path = poster_path;
+    }
+
+    public double getVote_average() {
+        return vote_average;
+    }
+
+    public void setVote_average(double vote_average) {
+        this.vote_average = vote_average;
+    }
+
+    public String getRelease_date() {
+        return release_date;
+    }
+
+    public void setRelease_date(String release_date) {
+        this.release_date = release_date;
+    }
+
     @Expose
+    @ColumnInfo(name = "poster_path")
     private String poster_path;
     @Expose
+    @ColumnInfo(name = "overview")
     private String overview;
     @Expose
+    @ColumnInfo(name = "vote_average")
     private double vote_average;
     @Expose
+    @ColumnInfo(name = "release_date")
     private String release_date;
 
     // TODO: Implement these as properties.
+    @Ignore
     private List<Trailer> trailers;
+    @Ignore
     private List<Review> reviews;
 
     // Constructor for object creation.
@@ -58,35 +91,7 @@ public class Movie implements Parcelable {
         this.release_date = release_date;
     }
 
-    // Constructor for Parcelable, for passing object data through intents.
-    private Movie(Parcel in) {
-        this.id = in.readInt();
-        this.title = in.readString();
-        this.poster_path = in.readString();
-        this.overview = in.readString();
-        this.vote_average = in.readDouble();
-        this.release_date = in.readString();
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeString(this.title);
-        dest.writeString(this.poster_path);
-        dest.writeString(this.overview);
-        dest.writeDouble(this.vote_average);
-        dest.writeString(this.release_date);
-    }
-
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
 
     private String ConvertDateFormat(String oldFormat) {
         try {
@@ -115,13 +120,13 @@ public class Movie implements Parcelable {
         this.title = title;
     }
 
-    public String getPosterPath() {
-        return poster_path;
-    }
-
-    public void setPosterPath(String poster_path) {
-        this.poster_path = poster_path;
-    }
+//    public String getPosterPath() {
+//        return poster_path;
+//    }
+//
+//    public void setPosterPath(String poster_path) {
+//        this.poster_path = poster_path;
+//    }
 
     public String getOverview() {
         return overview;
@@ -130,22 +135,22 @@ public class Movie implements Parcelable {
     public void setOverview(String overview) {
         this.overview = overview;
     }
-
-    public double getVoteAverage() {
-        return vote_average;
-    }
-
-    public void setVoteAverage(double vote_average) {
-        this.vote_average = vote_average;
-    }
-
-    public String getReleaseDate() {
-        return ConvertDateFormat(release_date);
-    }
-
-    public void setReleaseDate(String release_date) {
-        this.release_date = release_date;
-    }
+//
+//    public double getVoteAverage() {
+//        return vote_average;
+//    }
+//
+//    public void setVoteAverage(double vote_average) {
+//        this.vote_average = vote_average;
+//    }
+//
+//    public String getReleaseDate() {
+//        return ConvertDateFormat(release_date);
+//    }
+//
+//    public void setReleaseDate(String release_date) {
+//        this.release_date = release_date;
+//    }
 
     // Our poster image url is not relying on any private variables.
     // API calls with retrofit2 did not seem to initialize constructor that would originally
@@ -168,12 +173,6 @@ public class Movie implements Parcelable {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
-    }
-
-    // Need to override this if you are implementing Parcelable.
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
 }
