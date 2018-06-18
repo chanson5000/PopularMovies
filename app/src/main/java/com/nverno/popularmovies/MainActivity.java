@@ -14,8 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.nverno.popularmovies.database.PopularMovieDatabase;
+import com.nverno.popularmovies.database.TopRatedMovieDatabase;
 import com.nverno.popularmovies.model.Movie;
-import com.nverno.popularmovies.viewmodel.MoviesViewModel;
+import com.nverno.popularmovies.repository.PopularMovieRepository;
+import com.nverno.popularmovies.repository.TopRatedMovieRepository;
+import com.nverno.popularmovies.viewmodel.PopularMoviesViewModel;
+import com.nverno.popularmovies.viewmodel.TopRatedMoviesViewModel;
 
 import java.util.List;
 
@@ -40,17 +45,15 @@ public class MainActivity extends AppCompatActivity implements
     private static int sMovieSortType;
 
     // To identify that we are moving movie data through an intent.
-    private static final String INTENT_MOVIE_DATA = "MOVIE";
-
-    MoviesViewModel moviesViewModel;
+    private static final String MOVIE_ID = "MOVIE_ID_EXTRA";
+    private static final String MOVIE_SORT_TYPE = "MOVIE_SORT_TYPE";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ButterKnife.bind(this);
 
-        moviesViewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
+        ButterKnife.bind(this);
 
         if (mLoadingSpinner.getVisibility() == View.INVISIBLE) {
             mLoadingSpinner.setVisibility(View.VISIBLE);
@@ -71,12 +74,31 @@ public class MainActivity extends AppCompatActivity implements
         // Set the adapter, attaching it to the RecyclerView in the layout.
         mRecyclerView.setAdapter(mPosterAdapter);
 
+        populateMoviesDatabase();
+
         initializeMoviesViewModel();
     }
 
-    private void setPopularMoviesView() {
+    // TODO: Reduce the use of this function for when needed, not on every onCreate().
 
-        moviesViewModel.getPopularMovies().observe(this, new Observer<List<Movie>>() {
+    private void populateMoviesDatabase () {
+
+        PopularMovieDatabase mPopMovieDb = PopularMovieDatabase.getInstance(getApplicationContext());
+        TopRatedMovieDatabase mTopMovieDb = TopRatedMovieDatabase.getsInstance(getApplicationContext());
+
+        PopularMovieRepository popularMovieRepository = new PopularMovieRepository();
+        TopRatedMovieRepository topRatedMovieRepository = new TopRatedMovieRepository();
+
+        popularMovieRepository.loadPopularMovies(mPopMovieDb);
+        topRatedMovieRepository.loadTopRatedMovies(mTopMovieDb);
+    }
+
+    private void setPopularMoviesView() {
+        PopularMoviesViewModel popularMoviesViewModel = ViewModelProviders.of(this)
+                .get(PopularMoviesViewModel.class);
+
+
+        popularMoviesViewModel.getPopularMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
                 mLoadingSpinner.setVisibility(View.INVISIBLE);
@@ -86,8 +108,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setTopRatedMoviesView() {
+        TopRatedMoviesViewModel topRatedMoviesViewModel= ViewModelProviders.of(this)
+                .get(TopRatedMoviesViewModel.class);
 
-        moviesViewModel.getTopRatedMovies().observe(this, new Observer<List<Movie>>() {
+        topRatedMoviesViewModel.getTopRatedMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
                 mLoadingSpinner.setVisibility(View.INVISIBLE);
@@ -97,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initializeMoviesViewModel() {
-
         if (sMovieSortType == SORT_POPULAR) {
             setPopularMoviesView();
         } else {
@@ -116,7 +139,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
         // Pushing our parcelable movie data through the intent.
-        intentToStartDetailActivity.putExtra(INTENT_MOVIE_DATA, movieForDay.getId());
+        intentToStartDetailActivity.putExtra(MOVIE_ID, movieForDay.getId());
+        intentToStartDetailActivity.putExtra(MOVIE_SORT_TYPE, sMovieSortType);
 
         startActivity(intentToStartDetailActivity);
     }

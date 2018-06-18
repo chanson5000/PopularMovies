@@ -7,12 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.viewmodel.MoviesViewModel;
+import com.nverno.popularmovies.viewmodel.PopularMoviesViewModel;
+import com.nverno.popularmovies.viewmodel.TopRatedMoviesViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -33,7 +34,12 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.move_description_detail)
     TextView movieDescriptionDetail;
 
-    MoviesViewModel moviesViewModel;
+    PopularMoviesViewModel popularMoviesViewModel;
+    TopRatedMoviesViewModel topRatedMoviesViewModel;
+
+    private static final String MOVIE_ID = "MOVIE_ID_EXTRA";
+    private static final String MOVIE_SORT_TYPE = "MOVIE_SORT_TYPE";
+
     Movie movie;
 
     @Override
@@ -44,21 +50,20 @@ public class DetailActivity extends AppCompatActivity {
 
         final Context mContext = this;
 
-        moviesViewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
-
         Intent intentThatStartedThisActivity = getIntent();
 
-        if (intentThatStartedThisActivity != null) {
+        if (intentThatStartedThisActivity != null
+                && intentThatStartedThisActivity.hasExtra(MOVIE_ID)
+                && intentThatStartedThisActivity.hasExtra(MOVIE_SORT_TYPE)) {
             // The extra data is the Movie object implementing Parcelable.
-            if (intentThatStartedThisActivity.hasExtra("MOVIE")) {
+            Bundle bundle = intentThatStartedThisActivity.getExtras();
 
-                // Put the parcelable into a bundle.
-                Bundle bundle = intentThatStartedThisActivity.getExtras();
+            final int movieId = bundle.getInt(MOVIE_ID);
+            final int sortType = bundle.getInt(MOVIE_SORT_TYPE);
 
-                // Turn that bundle back into the Movie object.
-                final int movieId = bundle.getInt("MOVIE");
-
-                moviesViewModel.getPopularMovies().observe(this, new Observer<List<Movie>>() {
+            if (sortType == 0) {
+                popularMoviesViewModel = ViewModelProviders.of(this).get(PopularMoviesViewModel.class);
+                popularMoviesViewModel.getPopularMovies().observe(this, new Observer<List<Movie>>() {
                     @Override
                     public void onChanged(@Nullable List<Movie> movies) {
 
@@ -67,16 +72,40 @@ public class DetailActivity extends AppCompatActivity {
                             for (Movie letMovie : movies) {
                                 if (letMovie.getId() == movieId) {
                                     movie = letMovie;
+//                                    return;
                                 }
                             }
                         }
 
-//                        mLoadingSpinner.setVisibility(View.INVISIBLE);
                         Picasso.with(mContext).load(movie.getPosterImage()).into(moviePosterDetail);
 
                         movieTitleDetail.setText(movie.getTitle());
-                        movieRatingDetail.setText(Double.toString(movie.getVoteAverage()));
-                        movieReleaseDetail.setText(movie.getReleaseDate());
+                        movieRatingDetail.setText(Double.toString(movie.getVote_average()));
+                        movieReleaseDetail.setText(movie.getRelease_date());
+                        movieDescriptionDetail.setText(movie.getOverview());
+                    }
+                });
+            } else {
+                topRatedMoviesViewModel = ViewModelProviders.of(this).get(TopRatedMoviesViewModel.class);
+                topRatedMoviesViewModel.getTopRatedMovies().observe(this, new Observer<List<Movie>>() {
+                    @Override
+                    public void onChanged(@Nullable List<Movie> movies) {
+
+                        if (movies != null) {
+
+                            for (Movie letMovie : movies) {
+                                if (letMovie.getId() == movieId) {
+                                    movie = letMovie;
+//                                    return;
+                                }
+                            }
+                        }
+
+                        Picasso.with(mContext).load(movie.getPosterImage()).into(moviePosterDetail);
+
+                        movieTitleDetail.setText(movie.getTitle());
+                        movieRatingDetail.setText(Double.toString(movie.getVote_average()));
+                        movieReleaseDetail.setText(movie.getRelease_date());
                         movieDescriptionDetail.setText(movie.getOverview());
                     }
                 });
