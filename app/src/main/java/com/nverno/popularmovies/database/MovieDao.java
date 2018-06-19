@@ -24,7 +24,7 @@ public interface MovieDao {
     LiveData<List<Movie>> getByPopularity();
 
     @Query("SELECT * FROM movie WHERE id = :id")
-    LiveData<Movie> loadMovieById(int id);
+    LiveData<Movie> getMovieById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMany(List<Movie> movies);
