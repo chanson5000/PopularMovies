@@ -29,8 +29,13 @@ public class ReviewActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     @BindView(R.id.no_reviews)
     TextView mNoReviews;
+    @BindView(R.id.review_movie_title)
+    TextView mMovieTitle;
+    @BindView(R.id.review_header)
+    TextView mReviewHeader;
 
     private static final String MOVIE_ID = "MOVIE_ID_EXTRA";
+    private static final String MOVIE_TITLE = "MOVIE_NAME_EXTRA";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,10 +57,12 @@ public class ReviewActivity extends AppCompatActivity {
 
         Intent intentThatStartedThisActivity = getIntent();
 
-        if (intentThatStartedThisActivity != null && intentThatStartedThisActivity.hasExtra(MOVIE_ID)) {
+        if (intentThatStartedThisActivity != null
+                && intentThatStartedThisActivity.hasExtra(MOVIE_ID)
+                && intentThatStartedThisActivity.hasExtra(MOVIE_TITLE)) {
 
             Bundle bundle = intentThatStartedThisActivity.getExtras();
-
+            mMovieTitle.setText(bundle.getString(MOVIE_TITLE));
             setReviewsView(bundle.getInt(MOVIE_ID));
         }
 
@@ -79,7 +86,9 @@ public class ReviewActivity extends AppCompatActivity {
                 }
 
                 if (adapterReviews.isEmpty()) {
+                    mReviewHeader.setVisibility(View.INVISIBLE);
                     mNoReviews.setVisibility(View.VISIBLE);
+
                     return;
                 }
 
