@@ -1,0 +1,91 @@
+package com.nverno.popularmovies;
+
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
+
+import com.nverno.popularmovies.model.Review;
+import com.nverno.popularmovies.viewmodel.ReviewsViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class ReviewActivity extends AppCompatActivity {
+
+    private ReviewAdapter mReviewAdapter;
+
+    @BindView(R.id.recycler_reviews)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.no_reviews)
+    TextView mNoReviews;
+
+    private static final String MOVIE_ID = "MOVIE_ID_EXTRA";
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_review);
+
+        ButterKnife.bind(this);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        mRecyclerView.setHasFixedSize(false);
+
+        mReviewAdapter = new ReviewAdapter(this);
+
+        mRecyclerView.setAdapter(mReviewAdapter);
+
+        final Context mContext = this;
+
+        Intent intentThatStartedThisActivity = getIntent();
+
+        if (intentThatStartedThisActivity != null && intentThatStartedThisActivity.hasExtra(MOVIE_ID)) {
+
+            Bundle bundle = intentThatStartedThisActivity.getExtras();
+
+            setReviewsView(bundle.getInt(MOVIE_ID));
+        }
+
+    }
+
+    private void setReviewsView(final int movieId) {
+        ReviewsViewModel reviewsViewModel = ViewModelProviders.of(this)
+                .get(ReviewsViewModel.class);
+
+        reviewsViewModel.getReviews().observe(this, new Observer<List<Review>>() {
+            @Override
+            public void onChanged(@Nullable List<Review> reviews) {
+
+
+                List<Review> adapterReviews = new ArrayList<>();
+
+                for (Review review : reviews) {
+                    if (review.getMovieId() == movieId) {
+                        adapterReviews.add(review);
+                    }
+                }
+
+                if (adapterReviews.isEmpty()) {
+                    mNoReviews.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+                mReviewAdapter.setReviewsData(adapterReviews);
+            }
+        });
+    }
+
+}
