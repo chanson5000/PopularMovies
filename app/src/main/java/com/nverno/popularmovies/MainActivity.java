@@ -15,10 +15,14 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.nverno.popularmovies.database.PopularMovieDatabase;
+import com.nverno.popularmovies.database.ReviewDatabase;
 import com.nverno.popularmovies.database.TopRatedMovieDatabase;
+import com.nverno.popularmovies.database.TrailerDatabase;
 import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.repository.PopularMovieRepository;
+import com.nverno.popularmovies.repository.ReviewRepository;
 import com.nverno.popularmovies.repository.TopRatedMovieRepository;
+import com.nverno.popularmovies.repository.TrailerRepository;
 import com.nverno.popularmovies.viewmodel.PopularMoviesViewModel;
 import com.nverno.popularmovies.viewmodel.TopRatedMoviesViewModel;
 
@@ -136,13 +140,22 @@ public class MainActivity extends AppCompatActivity implements
         Class destinationClass = DetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
 
+        initializeExtraData(movieForDay.getId());
 
-
-        // Pushing our parcelable movie data through the intent.
         intentToStartDetailActivity.putExtra(MOVIE_ID, movieForDay.getId());
         intentToStartDetailActivity.putExtra(MOVIE_SORT_TYPE, sMovieSortType);
 
         startActivity(intentToStartDetailActivity);
+    }
+
+    private void initializeExtraData(int movieId) {
+        ReviewDatabase reviewDatabase = ReviewDatabase.getInstance(getApplicationContext());
+        ReviewRepository reviewRepository = new ReviewRepository();
+        reviewRepository.loadMovieReviews(reviewDatabase, movieId);
+
+        TrailerDatabase trailerDatabase = TrailerDatabase.getInstance(getApplicationContext());
+        TrailerRepository trailerRepository = new TrailerRepository();
+        trailerRepository.loadMovieTrailers(trailerDatabase, movieId);
     }
 
     // Create and inflate the options menu
