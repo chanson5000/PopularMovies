@@ -2,6 +2,7 @@ package com.nverno.popularmovies.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 
@@ -12,6 +13,7 @@ public class Trailer {
 
     @PrimaryKey
     @Expose
+    @NonNull
     private String id;
 
     @Expose
