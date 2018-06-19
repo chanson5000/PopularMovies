@@ -18,7 +18,7 @@ public class PopularMoviesViewModel extends AndroidViewModel {
         super(app);
         PopularMovieDatabase database = PopularMovieDatabase.getInstance(this.getApplication());
 
-        popularMovies = database.movieDao().getAll();
+        popularMovies = database.movieDao().getByPopularity();
     }
 
     public LiveData<List<Movie>> getPopularMovies() {
