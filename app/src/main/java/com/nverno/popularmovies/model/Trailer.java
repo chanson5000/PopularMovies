@@ -15,6 +15,9 @@ public class Trailer {
     @Expose
     private String site;
 
+    public Trailer() {
+    }
+
     public String getTrailer() {
         return base_youtube_url + key;
     }
