@@ -8,7 +8,14 @@ import java.util.List;
 public class TrailerResult {
 
     @Expose
+    private int id;
+
+    @Expose
     private List<Trailer> results;
+
+    public int getMovieId() {
+        return id;
+    }
 
     public List<Trailer> GetTrailers() {
 
