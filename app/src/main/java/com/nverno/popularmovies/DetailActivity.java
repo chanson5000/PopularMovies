@@ -42,6 +42,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private static final String MOVIE_ID = "MOVIE_ID_EXTRA";
     private static final String MOVIE_SORT_TYPE = "MOVIE_SORT_TYPE";
+    private static final String MOVIE_TITLE = "MOVIE_NAME_EXTRA";
 
     private static Movie movie;
     private static int movieId;
@@ -123,6 +124,7 @@ public class DetailActivity extends AppCompatActivity {
         Intent intentToStartReviewActivity = new Intent(context, destinationClass);
 
         intentToStartReviewActivity.putExtra(MOVIE_ID, movie.getId());
+        intentToStartReviewActivity.putExtra(MOVIE_TITLE, movie.getTitle());
 
         startActivity(intentToStartReviewActivity);
     }
