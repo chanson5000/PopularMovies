@@ -17,6 +17,9 @@ public interface ReviewDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMany(List<Review> reviews);
 
+    @Query("SELECT * FROM review")
+    LiveData<List<Review>> getAll();
+
     @Query("SELECT * FROM review WHERE movieId = :movieId")
     LiveData<List<Review>> getByMovieId(int movieId);
 
