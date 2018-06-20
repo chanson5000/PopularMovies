@@ -6,6 +6,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,66 +20,27 @@ public class Movie {
     // This is the base url we will use to fetch poster image urls.
     private static final String base_poster_url = "https://image.tmdb.org/t/p/w500";
 
-    // Note: Serialization (Java to JSON), Deserialization (JSON to Java)
-    // @SerializedName("field") sets the annotation of the JSON fields we fetch from the API.
-    // With my fields being the same as my private variables, it is not needed.
-    // With @Expose(serialization = false) we can also set whether we (de)serialize or not.
-
-    // Serialize and Expose for use with retrofit2
+    // Expose for use with retrofit2
     @Expose
     @PrimaryKey
     private int id;
+
     @Expose
-    @ColumnInfo(name = "title")
     private String title;
 
-    public String getPoster_path() {
-        return poster_path;
-    }
-
-    public void setPoster_path(String poster_path) {
-        this.poster_path = poster_path;
-    }
-
-    public double getVote_average() {
-        return vote_average;
-    }
-
-    public void setVote_average(double vote_average) {
-        this.vote_average = vote_average;
-    }
-
-    public String getRelease_date() {
-        return release_date;
-    }
-
-    public void setRelease_date(String release_date) {
-        this.release_date = release_date;
-    }
+    @SerializedName("poster_path")
+    private String posterPath;
 
     @Expose
-    @ColumnInfo(name = "poster_path")
-    private String poster_path;
-    @Expose
-    @ColumnInfo(name = "overview")
     private String overview;
-    @Expose
-    @ColumnInfo(name = "vote_average")
-    private double vote_average;
-    @Expose
-    @ColumnInfo(name = "release_date")
-    private String release_date;
 
-    public double getPopularity() {
-        return popularity;
-    }
+    @SerializedName("vote_average")
+    private double voteAverage;
 
-    public void setPopularity(double popularity) {
-        this.popularity = popularity;
-    }
+    @SerializedName("release_date")
+    private String releaseDate;
 
     @Expose
-    @ColumnInfo(name = "popularity")
     private double popularity;
 
     // TODO: Implement these as properties.
@@ -88,34 +50,23 @@ public class Movie {
     private List<Review> reviews;
 
     // Constructor for object creation.
-    public Movie(int id,
-                 String title,
-                 String poster_path,
-                 String overview,
-                 double vote_average,
-                 String release_date,
-                 double popularity) {
-
-        this.id = id;
-        this.title = title;
-        this.poster_path = poster_path;
-        this.overview = overview;
-        this.vote_average = vote_average;
-        this.release_date = release_date;
-        this.popularity = popularity;
+    public Movie() {
     }
 
-
-
     private String ConvertDateFormat(String oldFormat) {
-        try {
-            Date date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(oldFormat);
-            return new SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+        // Check to see if the date format needs to be converted.
+        if (oldFormat.matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")) {
+            try {
+                Date date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(oldFormat);
+                return new SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return oldFormat;
+            }
+        } else {
+            return oldFormat;
         }
-        // Just return us the old format if it doesn't work out!
-        return oldFormat;
     }
 
     public int getId() {
@@ -135,11 +86,11 @@ public class Movie {
     }
 
     public String getPosterPath() {
-        return poster_path;
+        return posterPath;
     }
 
-    public void setPosterPath(String poster_path) {
-        this.poster_path = poster_path;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 
     public String getOverview() {
@@ -151,26 +102,34 @@ public class Movie {
     }
 
     public double getVoteAverage() {
-        return vote_average;
+        return voteAverage;
     }
 
-    public void setVoteAverage(double vote_average) {
-        this.vote_average = vote_average;
+    public void setVoteAverage(double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
     public String getReleaseDate() {
-        return ConvertDateFormat(release_date);
+        return ConvertDateFormat(releaseDate);
     }
 
-    public void setReleaseDate(String release_date) {
-        this.release_date = release_date;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public double getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(double popularity) {
+        this.popularity = popularity;
     }
 
     // Our poster image url is not relying on any private variables.
     // API calls with retrofit2 did not seem to initialize constructor that would originally
     // assign the private variable that would have been accessed here. This works.
     public String getPosterImage() {
-        return base_poster_url + poster_path;
+        return base_poster_url + posterPath;
     }
 
     public List<Trailer> getTrailers() {
