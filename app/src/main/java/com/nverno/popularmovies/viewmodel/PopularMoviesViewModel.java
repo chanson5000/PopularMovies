@@ -18,20 +18,32 @@ import java.util.List;
 public class PopularMoviesViewModel extends AndroidViewModel {
 
     private PopularMovieRepository popularMovieRepository;
-    private MutableLiveData<Movie> selectedMovie;
     private LiveData<List<Movie>> movies;
+    private LiveData<Movie> selectedMovie;
 
     public PopularMoviesViewModel(@NonNull Application app) {
         super(app);
 
         popularMovieRepository = new PopularMovieRepository(this.getApplication());
+
+        movies = popularMovieRepository.getPopularMoviesSorted();
     }
 
     public LiveData<List<Movie>> getPopularMovies() {
-        return popularMovieRepository.getPopularMoviesSorted();
+        return movies;
     }
 
     public LiveData<Movie> getMovieById(int movieId) {
-        return popularMovieRepository.getPopularMovieById(movieId);
+        loadSelectedMovie(movieId);
+
+        return selectedMovie;
+    }
+
+    private void loadSelectedMovie(int movieId) {
+        selectedMovie = popularMovieRepository.getPopularMovieById(movieId);
+    }
+
+    public LiveData<Movie> getSelectedMovie() {
+        return selectedMovie;
     }
 }
