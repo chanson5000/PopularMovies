@@ -68,7 +68,7 @@ public class TrailerRepository {
             }
 
             @Override
-            public void onFailure(Call<TrailerResult> call, Throwable t) {
+            public void onFailure(@NonNull Call<TrailerResult> call, @NonNull Throwable t) {
                 t.printStackTrace();
                 Log.e(LOG_TAG,
                         "Failed to retrieve Trailer data from the internet.");
