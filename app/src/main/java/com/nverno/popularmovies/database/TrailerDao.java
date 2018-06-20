@@ -17,6 +17,10 @@ public interface TrailerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMany(List<Trailer> trailers);
 
+
+    @Query("SELECT * FROM trailer")
+    LiveData<List<Trailer>> getAll();
+
     @Query("SELECT * FROM trailer WHERE movieId = :movieId")
     LiveData<List<Trailer>> getByMovieId(int movieId);
 
