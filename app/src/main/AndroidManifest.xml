@@ -24,6 +24,9 @@
         <activity android:name=".ReviewActivity"
             android:parentActivityName=".DetailActivity">
         </activity>
+        <activity android:name=".TrailerActivity"
+            android:parentActivityName=".DetailActivity">
+        </activity>
     </application>
 
 </manifest>
