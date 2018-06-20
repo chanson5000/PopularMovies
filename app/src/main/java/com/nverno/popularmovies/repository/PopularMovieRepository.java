@@ -59,14 +59,16 @@ public class PopularMovieRepository {
                         }
                     });
                 } else {
-                    Log.e(LOG_TAG, "Failed to retrieve Popular Movie data.");
+                    Log.e(LOG_TAG,
+                            "Failed to retrieve Popular Movie data from the internet.");
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<MovieResult> call, @NonNull Throwable t) {
                 t.printStackTrace();
-                Log.e(LOG_TAG, "Failed to retrieve Popular Movie data.");
+                Log.e(LOG_TAG,
+                        "Failed to retrieve Popular Movie data from the internet.");
             }
         });
     }
