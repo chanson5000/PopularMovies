@@ -97,7 +97,7 @@ public class DetailActivity extends AppCompatActivity {
                                 return;
                             }
                             mMovie = movie;
-                            setViews(movie);
+                            setViews();
                         }
                     });
         } else if (sortType == SORT_TOP_RATED) {
@@ -111,7 +111,7 @@ public class DetailActivity extends AppCompatActivity {
                                 return;
                             }
                             mMovie = movie;
-                            setViews(movie);
+                            setViews();
                         }
                     });
         } else {
@@ -125,21 +125,21 @@ public class DetailActivity extends AppCompatActivity {
                                 return;
                             }
                             mMovie = movie;
-                            setViews(movie);
+                            setViews();
                         }
                     });
         }
     }
 
-    private void setViews(Movie movie) {
-        Picasso.with(mContext).load(movie.getPosterImage()).into(moviePosterDetail);
+    private void setViews() {
+        Picasso.with(mContext).load(mMovie.getPosterImage()).into(moviePosterDetail);
 
-        movieTitleDetail.setText(movie.getTitle());
+        movieTitleDetail.setText(mMovie.getTitle());
         movieRatingDetail.setText(String.format(Locale.getDefault(),
-                "%.2f",
-                movie.getVote_average()));
-        movieReleaseDetail.setText(movie.getRelease_date());
-        movieDescriptionDetail.setText(movie.getOverview());
+                "%.1f",
+                mMovie.getVoteAverage()));
+        movieReleaseDetail.setText(mMovie.getReleaseDate());
+        movieDescriptionDetail.setText(mMovie.getOverview());
     }
 
     private void getFavoriteMovies() {
@@ -160,8 +160,8 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private boolean checkIfFavorite(int movieId, List<Movie> favorites) {
-        for (Movie letMovie : favorites) {
-            if (letMovie.getId() == movieId) {
+        for (Movie movie : favorites) {
+            if (movie.getId() == movieId) {
                 return true;
             }
         }

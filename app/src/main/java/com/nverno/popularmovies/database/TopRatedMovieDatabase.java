@@ -13,7 +13,7 @@ public abstract class TopRatedMovieDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = TopRatedMovieDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();
-    private static final String DATABASE_NAME = "topratedmovies";
+    private static final String DATABASE_NAME = "topRatedMovies";
     private static TopRatedMovieDatabase sInstance;
 
     public static TopRatedMovieDatabase getsInstance(Context context) {

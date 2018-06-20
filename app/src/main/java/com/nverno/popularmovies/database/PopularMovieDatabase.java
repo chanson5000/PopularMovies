@@ -13,7 +13,7 @@ public abstract class PopularMovieDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = PopularMovieDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();
-    private static final String DATABASE_NAME = "popularmovies";
+    private static final String DATABASE_NAME = "popularMovies";
     private static PopularMovieDatabase sInstance;
 
     public static PopularMovieDatabase getInstance(Context context) {

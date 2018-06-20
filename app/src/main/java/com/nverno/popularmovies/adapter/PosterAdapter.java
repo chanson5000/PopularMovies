@@ -1,6 +1,7 @@
 package com.nverno.popularmovies.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,11 +45,10 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdap
             Movie movieForDay = movies.get(adapterPosition);
             mClickHandler.onClick(movieForDay);
         }
-
     }
 
-    @Override
-    public PosterAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    @NonNull
+    public PosterAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         int layoutId = R.layout.poster_list_item;
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
@@ -60,7 +60,7 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdap
     }
 
     @Override
-    public void onBindViewHolder(PosterAdapterViewHolder posterAdapterViewHolder, int position) {
+    public void onBindViewHolder(@NonNull PosterAdapterViewHolder posterAdapterViewHolder, int position) {
         Picasso.with(mContext).load(movies.get(position).getPosterImage()).into(posterAdapterViewHolder.posterView);
     }
 

@@ -13,7 +13,7 @@ public abstract class  FavoriteMovieDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = FavoriteMovieDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();
-    private static final String DATABASE_NAME = "favoritemovies";
+    private static final String DATABASE_NAME = "favoriteMovies";
     private static FavoriteMovieDatabase sInstance;
 
     public static FavoriteMovieDatabase getInstance(Context context) {
