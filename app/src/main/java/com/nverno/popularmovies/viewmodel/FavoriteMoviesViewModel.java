@@ -7,23 +7,25 @@ import android.support.annotation.NonNull;
 
 import com.nverno.popularmovies.database.FavoriteMovieDatabase;
 import com.nverno.popularmovies.model.Movie;
+import com.nverno.popularmovies.repository.FavoriteMovieRepository;
 
 import java.util.List;
 
 public class FavoriteMoviesViewModel extends AndroidViewModel {
 
-    private FavoriteMovieDatabase database;
+    private FavoriteMovieRepository favoriteMovieRepository;
 
     public FavoriteMoviesViewModel(@NonNull Application app) {
         super(app);
-        database = FavoriteMovieDatabase.getInstance(this.getApplication());
+
+        favoriteMovieRepository = new FavoriteMovieRepository(this.getApplication());
     }
 
     public LiveData<List<Movie>> getFavoriteMovies() {
-        return database.movieDao().getAll();
+        return favoriteMovieRepository.getFavoriteMovies();
     }
 
     public LiveData<Movie> getMovieById(int movieId) {
-        return database.movieDao().getMovieById(movieId);
+        return favoriteMovieRepository.getMovieById(movieId);
     }
 }

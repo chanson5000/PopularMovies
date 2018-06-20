@@ -7,23 +7,25 @@ import android.support.annotation.NonNull;
 
 import com.nverno.popularmovies.database.TopRatedMovieDatabase;
 import com.nverno.popularmovies.model.Movie;
+import com.nverno.popularmovies.repository.TopRatedMovieRepository;
 
 import java.util.List;
 
 public class TopRatedMoviesViewModel extends AndroidViewModel {
 
-    private TopRatedMovieDatabase database;
+    private TopRatedMovieRepository topRatedMovieRepository;
 
     public TopRatedMoviesViewModel(@NonNull Application app) {
         super(app);
-        database = TopRatedMovieDatabase.getsInstance(this.getApplication());
+
+        topRatedMovieRepository = new TopRatedMovieRepository(this.getApplication());
     }
 
     public LiveData<List<Movie>> getTopRatedMovies() {
-        return database.movieDao().getByRating();
+        return topRatedMovieRepository.getTopRatedMoviesSorted();
     }
 
     public LiveData<Movie> getMovieById(int movieId) {
-        return database.movieDao().getMovieById(movieId);
+        return topRatedMovieRepository.getTopRatedMovieById(movieId);
     }
 }

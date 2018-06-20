@@ -1,5 +1,6 @@
 package com.nverno.popularmovies.repository;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -24,12 +25,21 @@ public class PopularMovieRepository {
 
     private PopularMovieDatabase popularMovieDatabase;
 
+    private static boolean databaseUpdated = false;
+
     public PopularMovieRepository(Context context) {
         popularMovieDatabase = PopularMovieDatabase.getInstance(context);
+
+        cacheWebData();
     }
 
     // Fetch popular movies from TheMovieDb.Org for cache into our database.
-    public void fetchPopularMoviesFromWeb() {
+    private void cacheWebData() {
+
+        if (databaseUpdated) {
+            Log.d(LOG_TAG, "Skipped fetching Popular Movie data from the internet.");
+            return;
+        }
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.themoviedb.org/")
@@ -52,12 +62,15 @@ public class PopularMovieRepository {
                 } else if (response.code() == 200) {
                     final List<Movie> movies = response.body().GetMovies();
 
+                    Log.d(LOG_TAG, "Loading Popular Movie data from the internet.");
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
                             popularMovieDatabase.movieDao().insertMany(movies);
                         }
                     });
+
+                    databaseUpdated = true;
                 } else {
                     Log.e(LOG_TAG,
                             "Failed to retrieve Popular Movie data from the internet.");
@@ -71,5 +84,13 @@ public class PopularMovieRepository {
                         "Failed to retrieve Popular Movie data from the internet.");
             }
         });
+    }
+
+    public LiveData<List<Movie>> getPopularMoviesSorted() {
+        return popularMovieDatabase.movieDao().getByPopularity();
+    }
+
+    public LiveData<Movie> getPopularMovieById(int movieId) {
+        return popularMovieDatabase.movieDao().getMovieById(movieId);
     }
 }

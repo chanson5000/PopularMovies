@@ -15,12 +15,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.nverno.popularmovies.adapter.PosterAdapter;
-import com.nverno.popularmovies.database.ReviewDatabase;
-import com.nverno.popularmovies.database.TrailerDatabase;
 import com.nverno.popularmovies.model.Movie;
-import com.nverno.popularmovies.repository.PopularMovieRepository;
 import com.nverno.popularmovies.repository.ReviewRepository;
-import com.nverno.popularmovies.repository.TopRatedMovieRepository;
 import com.nverno.popularmovies.repository.TrailerRepository;
 import com.nverno.popularmovies.viewmodel.FavoriteMoviesViewModel;
 import com.nverno.popularmovies.viewmodel.PopularMoviesViewModel;
@@ -34,9 +30,13 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements
         PosterAdapter.PosterAdapterOnClickHandler {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private PosterAdapter mPosterAdapter;
+
+    PopularMoviesViewModel popularMoviesViewModel;
+    TopRatedMoviesViewModel topRatedMoviesViewModel;
+    FavoriteMoviesViewModel favoriteMoviesViewModel;
 
     @BindView(R.id.recycler_view_posters) RecyclerView mRecyclerView;
     @BindView(R.id.main_activity_progress_bar) ProgressBar mLoadingSpinner;
@@ -77,9 +77,7 @@ public class MainActivity extends AppCompatActivity implements
         // Set the adapter, attaching it to the RecyclerView in the layout.
         mRecyclerView.setAdapter(mPosterAdapter);
 
-        populateMoviesDatabase();
-
-        initializeMoviesViewModel();
+        initViews();
     }
 
     @Override
@@ -128,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements
                     // set that item as checked.
                     item.setChecked(true);
                     // Set the view
-                    initializeMoviesViewModel();
+                    initViews();
                 }
                 return true;
 
@@ -138,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements
                     mLoadingSpinner.setVisibility(View.VISIBLE);
                     sMovieSortType = SORT_TOP_RATED;
                     item.setChecked(true);
-                    initializeMoviesViewModel();
+                    initViews();
                 }
                 return true;
 
@@ -148,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements
                     mLoadingSpinner.setVisibility(View.VISIBLE);
                     sMovieSortType = SHOW_FAVORITES;
                     item.setChecked(true);
-                    initializeMoviesViewModel();
+                    initViews();
                 }
                 return true;
 
@@ -157,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void initializeMoviesViewModel() {
+    private void initViews() {
         if (sMovieSortType == SORT_POPULAR) {
             setPopularMoviesView();
         } else if (sMovieSortType == SORT_TOP_RATED) {
@@ -168,51 +166,55 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setPopularMoviesView() {
-        PopularMoviesViewModel popularMoviesViewModel = ViewModelProviders.of(this)
+        popularMoviesViewModel = ViewModelProviders.of(this)
                 .get(PopularMoviesViewModel.class);
 
         popularMoviesViewModel.getPopularMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                mLoadingSpinner.setVisibility(View.INVISIBLE);
-                mPosterAdapter.setPosterData(movies);
+                if (movies == null || movies.isEmpty()) {
+                    mLoadingSpinner.setVisibility(View.VISIBLE);
+                } else {
+                    mLoadingSpinner.setVisibility(View.INVISIBLE);
+                    mPosterAdapter.setPosterData(movies);
+                }
             }
         });
     }
 
     private void setTopRatedMoviesView() {
-        TopRatedMoviesViewModel topRatedMoviesViewModel = ViewModelProviders.of(this)
+        topRatedMoviesViewModel = ViewModelProviders.of(this)
                 .get(TopRatedMoviesViewModel.class);
 
         topRatedMoviesViewModel.getTopRatedMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                mLoadingSpinner.setVisibility(View.INVISIBLE);
-                mPosterAdapter.setPosterData(movies);
+                if (movies == null || movies.isEmpty()) {
+                    mLoadingSpinner.setVisibility(View.VISIBLE);
+                } else {
+                    mLoadingSpinner.setVisibility(View.INVISIBLE);
+                    mPosterAdapter.setPosterData(movies);
+                }
             }
         });
     }
 
     private void setFavoriteMoviesView() {
-        FavoriteMoviesViewModel favoriteMoviesViewModel = ViewModelProviders.of(this)
+        favoriteMoviesViewModel = ViewModelProviders.of(this)
                 .get(FavoriteMoviesViewModel.class);
 
         favoriteMoviesViewModel.getFavoriteMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                mLoadingSpinner.setVisibility(View.INVISIBLE);
-                mPosterAdapter.setPosterData(movies);
+                if (movies == null || movies.isEmpty()) {
+                    mLoadingSpinner.setVisibility(View.VISIBLE);
+
+                } else {
+                    mLoadingSpinner.setVisibility(View.INVISIBLE);
+                    mPosterAdapter.setPosterData(movies);
+                }
             }
         });
-    }
-
-    // TODO: Reduce the use of this function for when needed, not on every onCreate().
-    private void populateMoviesDatabase () {
-        PopularMovieRepository popularMovieRepository = new PopularMovieRepository(getApplicationContext());
-        popularMovieRepository.fetchPopularMoviesFromWeb();
-
-        TopRatedMovieRepository topRatedMovieRepository = new TopRatedMovieRepository(getApplicationContext());
-        topRatedMovieRepository.fetchTopRatedMoviesFromWeb();
     }
 
     private void populateExtraData(int movieId) {
