@@ -1,5 +1,9 @@
 package com.nverno.popularmovies.repository;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import com.nverno.popularmovies.database.PopularMovieDatabase;
 import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.model.MovieResult;
@@ -16,37 +20,53 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PopularMovieRepository {
 
-    private MovieDbApi movieDbApi;
+    private static final String LOG_TAG = PopularMovieRepository.class.getSimpleName();
 
-    public PopularMovieRepository() {
+    private PopularMovieDatabase popularMovieDatabase;
+
+    public PopularMovieRepository(Context context) {
+        popularMovieDatabase = PopularMovieDatabase.getInstance(context);
+    }
+
+    // Fetch popular movies from TheMovieDb.Org for cache into our database.
+    public void fetchPopularMoviesFromWeb() {
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.themoviedb.org/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        movieDbApi = retrofit.create(MovieDbApi.class);
-    }
-
-    public void loadPopularMovies(final PopularMovieDatabase popularMovieDatabase) {
+        MovieDbApi movieDbApi = retrofit.create(MovieDbApi.class);
 
         Call<MovieResult> call = movieDbApi.popularMovies();
 
+        // Save to the database
         call.enqueue(new Callback<MovieResult>() {
-            @Override
-            public void onResponse(Call<MovieResult> call, Response<MovieResult> response) {
-                final List<Movie> movies = response.body().GetMovies();
 
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        popularMovieDatabase.movieDao().insertMany(movies);
-                    }
-                });
+            @Override
+            public void onResponse(@NonNull Call<MovieResult> call,
+                                   @NonNull Response<MovieResult> response) {
+
+                if (response.code() == 401 || response.code() == 404) {
+                    Log.e(LOG_TAG, response.body().GetStatusMessage());
+                } else if (response.code() == 200) {
+                    final List<Movie> movies = response.body().GetMovies();
+
+                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            popularMovieDatabase.movieDao().insertMany(movies);
+                        }
+                    });
+                } else {
+                    Log.e(LOG_TAG, "Failed to retrieve Popular Movie data.");
+                }
             }
 
             @Override
-            public void onFailure(Call<MovieResult> call, Throwable t) {
-
+            public void onFailure(@NonNull Call<MovieResult> call, @NonNull Throwable t) {
+                t.printStackTrace();
+                Log.e(LOG_TAG, "Failed to retrieve Popular Movie data.");
             }
         });
     }
