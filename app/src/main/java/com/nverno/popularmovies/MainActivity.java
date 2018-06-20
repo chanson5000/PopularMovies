@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.nverno.popularmovies.adapter.PosterAdapter;
 import com.nverno.popularmovies.model.Movie;
@@ -38,8 +39,12 @@ public class MainActivity extends AppCompatActivity implements
     TopRatedMoviesViewModel topRatedMoviesViewModel;
     FavoriteMoviesViewModel favoriteMoviesViewModel;
 
-    @BindView(R.id.recycler_view_posters) RecyclerView mRecyclerView;
-    @BindView(R.id.main_activity_progress_bar) ProgressBar mLoadingSpinner;
+    @BindView(R.id.recycler_view_posters)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.main_activity_progress_bar)
+    ProgressBar mLoadingSpinner;
+    @BindView(R.id.no_favorites)
+    TextView mTextNoFavorites;
 
     // To identify our sort types.
     private static final int SORT_POPULAR = 0;
@@ -72,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.setHasFixedSize(true);
 
         // The PosterAdapter links our poster images with the views that display them.
-        mPosterAdapter = new PosterAdapter(this,this);
+        mPosterAdapter = new PosterAdapter(this, this);
 
         // Set the adapter, attaching it to the RecyclerView in the layout.
         mRecyclerView.setAdapter(mPosterAdapter);
@@ -104,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements
         // Sort by most popular is default and checked.
         if (sMovieSortType == SORT_POPULAR) {
             menu.findItem(R.id.sort_by_most_popular).setChecked(true);
-        } else if (sMovieSortType == SORT_TOP_RATED){
+        } else if (sMovieSortType == SORT_TOP_RATED) {
             menu.findItem(R.id.sort_by_top_rated).setChecked(true);
         } else {
             menu.findItem(R.id.show_favorites).setChecked(true);
@@ -120,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.sort_by_most_popular:
                 // and the sort type is not already "most popular"
                 if (sMovieSortType != SORT_POPULAR) {
-                    mLoadingSpinner.setVisibility(View.VISIBLE);
                     // set the sort type to "most popular"
                     sMovieSortType = SORT_POPULAR;
                     // set that item as checked.
@@ -133,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements
             // Every thing like above, but the opposite.
             case R.id.sort_by_top_rated:
                 if (sMovieSortType != SORT_TOP_RATED) {
-                    mLoadingSpinner.setVisibility(View.VISIBLE);
                     sMovieSortType = SORT_TOP_RATED;
                     item.setChecked(true);
                     initViews();
@@ -143,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements
             // For favorites
             case R.id.show_favorites:
                 if (sMovieSortType != SHOW_FAVORITES) {
-                    mLoadingSpinner.setVisibility(View.VISIBLE);
                     sMovieSortType = SHOW_FAVORITES;
                     item.setChecked(true);
                     initViews();
@@ -156,6 +158,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initViews() {
+
+        showLoadingIndicator();
+
         if (sMovieSortType == SORT_POPULAR) {
             setPopularMoviesView();
         } else if (sMovieSortType == SORT_TOP_RATED) {
@@ -166,17 +171,17 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setPopularMoviesView() {
+
         popularMoviesViewModel = ViewModelProviders.of(this)
                 .get(PopularMoviesViewModel.class);
 
         popularMoviesViewModel.getPopularMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                if (movies == null || movies.isEmpty()) {
-                    mLoadingSpinner.setVisibility(View.VISIBLE);
-                } else {
-                    mLoadingSpinner.setVisibility(View.INVISIBLE);
-                    mPosterAdapter.setPosterData(movies);
+                mPosterAdapter.setPosterData(movies);
+
+                if (movies != null && !movies.isEmpty()) {
+                    hideLoadingIndicator();
                 }
             }
         });
@@ -189,11 +194,10 @@ public class MainActivity extends AppCompatActivity implements
         topRatedMoviesViewModel.getTopRatedMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                if (movies == null || movies.isEmpty()) {
-                    mLoadingSpinner.setVisibility(View.VISIBLE);
-                } else {
-                    mLoadingSpinner.setVisibility(View.INVISIBLE);
-                    mPosterAdapter.setPosterData(movies);
+                mPosterAdapter.setPosterData(movies);
+
+                if (movies != null && !movies.isEmpty()) {
+                    hideLoadingIndicator();
                 }
             }
         });
@@ -204,17 +208,37 @@ public class MainActivity extends AppCompatActivity implements
                 .get(FavoriteMoviesViewModel.class);
 
         favoriteMoviesViewModel.getFavoriteMovies().observe(this, new Observer<List<Movie>>() {
+
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                if (movies == null || movies.isEmpty()) {
-                    mLoadingSpinner.setVisibility(View.VISIBLE);
+                mPosterAdapter.setPosterData(movies);
 
+                if (movies == null || movies.isEmpty()) {
+                    showNoFavorites();
                 } else {
-                    mLoadingSpinner.setVisibility(View.INVISIBLE);
-                    mPosterAdapter.setPosterData(movies);
+                    hideNoFavorites();
+                    hideLoadingIndicator();
                 }
             }
         });
+    }
+
+    private void showLoadingIndicator() {
+        hideNoFavorites();
+        mLoadingSpinner.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoadingIndicator() {
+        mLoadingSpinner.setVisibility(View.INVISIBLE);
+    }
+
+    private void showNoFavorites() {
+        hideLoadingIndicator();
+        mTextNoFavorites.setVisibility(View.VISIBLE);
+    }
+
+    private void hideNoFavorites() {
+        mTextNoFavorites.setVisibility(View.INVISIBLE);
     }
 
     private void populateExtraData(int movieId) {
