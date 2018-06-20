@@ -1,8 +1,8 @@
 package com.nverno.popularmovies.repository;
 
-import com.nverno.popularmovies.database.PopularMovieDatabase;
-import com.nverno.popularmovies.model.Movie;
-import com.nverno.popularmovies.model.MovieResult;
+import com.nverno.popularmovies.database.ReviewDatabase;
+import com.nverno.popularmovies.model.Review;
+import com.nverno.popularmovies.model.ReviewResult;
 import com.nverno.popularmovies.moviedb.MovieDbApi;
 import com.nverno.popularmovies.util.AppExecutors;
 
@@ -14,11 +14,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PopularMovieRepository {
+public class ReviewRepository {
 
     private MovieDbApi movieDbApi;
 
-    public PopularMovieRepository() {
+    public ReviewRepository() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.themoviedb.org/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -27,25 +27,29 @@ public class PopularMovieRepository {
         movieDbApi = retrofit.create(MovieDbApi.class);
     }
 
-    public void loadPopularMovies(final PopularMovieDatabase popularMovieDatabase) {
+    public void loadMovieReviews(final ReviewDatabase reviewDatabase, final int movieId) {
 
-        Call<MovieResult> call = movieDbApi.popularMovies();
+        Call<ReviewResult> call = movieDbApi.reviews(movieId);
 
-        call.enqueue(new Callback<MovieResult>() {
+        call.enqueue(new Callback<ReviewResult>() {
             @Override
-            public void onResponse(Call<MovieResult> call, Response<MovieResult> response) {
-                final List<Movie> movies = response.body().GetMovies();
+            public void onResponse(Call<ReviewResult> call, Response<ReviewResult> response) {
+                final List<Review> reviews = response.body().GetReviews();
+
+                for (Review review : reviews) {
+                    review.setMovieId(movieId);
+                }
 
                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                     @Override
                     public void run() {
-                        popularMovieDatabase.movieDao().insertMany(movies);
+                        reviewDatabase.reviewDao().insertMany(reviews);
                     }
                 });
             }
 
             @Override
-            public void onFailure(Call<MovieResult> call, Throwable t) {
+            public void onFailure(Call<ReviewResult> call, Throwable t) {
 
             }
         });

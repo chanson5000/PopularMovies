@@ -18,7 +18,7 @@ public class TopRatedMoviesViewModel extends AndroidViewModel {
         super(app);
         TopRatedMovieDatabase database = TopRatedMovieDatabase.getsInstance(this.getApplication());
 
-        topRatedMovies = database.movieDao().getAll();
+        topRatedMovies = database.movieDao().getByRating();
     }
 
     public LiveData<List<Movie>> getTopRatedMovies() {

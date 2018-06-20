@@ -84,6 +84,27 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/click_reviews"
+            android:text="@string/reviews"
+            android:layout_margin="5dp"
+            android:textSize="18sp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="showReviews"/>
+
+        <Button
+            android:id="@+id/click_trailers"
+            android:text="@string/trailers"
+            android:layout_margin="5dp"
+            android:textSize="18sp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="showTrailers" />
+
     </LinearLayout>
 
 </ScrollView>

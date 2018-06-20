@@ -69,6 +69,18 @@ public class Movie {
     @ColumnInfo(name = "release_date")
     private String release_date;
 
+    public double getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(double popularity) {
+        this.popularity = popularity;
+    }
+
+    @Expose
+    @ColumnInfo(name = "popularity")
+    private double popularity;
+
     // TODO: Implement these as properties.
     @Ignore
     private List<Trailer> trailers;
@@ -81,7 +93,8 @@ public class Movie {
                  String poster_path,
                  String overview,
                  double vote_average,
-                 String release_date) {
+                 String release_date,
+                 double popularity) {
 
         this.id = id;
         this.title = title;
@@ -89,6 +102,7 @@ public class Movie {
         this.overview = overview;
         this.vote_average = vote_average;
         this.release_date = release_date;
+        this.popularity = popularity;
     }
 
 

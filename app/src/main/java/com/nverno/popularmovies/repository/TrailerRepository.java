@@ -1,8 +1,8 @@
 package com.nverno.popularmovies.repository;
 
-import com.nverno.popularmovies.database.PopularMovieDatabase;
-import com.nverno.popularmovies.model.Movie;
-import com.nverno.popularmovies.model.MovieResult;
+import com.nverno.popularmovies.database.TrailerDatabase;
+import com.nverno.popularmovies.model.Trailer;
+import com.nverno.popularmovies.model.TrailerResult;
 import com.nverno.popularmovies.moviedb.MovieDbApi;
 import com.nverno.popularmovies.util.AppExecutors;
 
@@ -14,11 +14,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PopularMovieRepository {
+public class TrailerRepository {
 
     private MovieDbApi movieDbApi;
 
-    public PopularMovieRepository() {
+    public TrailerRepository() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.themoviedb.org/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -27,27 +27,33 @@ public class PopularMovieRepository {
         movieDbApi = retrofit.create(MovieDbApi.class);
     }
 
-    public void loadPopularMovies(final PopularMovieDatabase popularMovieDatabase) {
+    public void loadMovieTrailers(final TrailerDatabase trailerDatabase, final int movieId) {
 
-        Call<MovieResult> call = movieDbApi.popularMovies();
+        Call<TrailerResult> call = movieDbApi.trailers(movieId);
 
-        call.enqueue(new Callback<MovieResult>() {
+        call.enqueue(new Callback<TrailerResult>() {
             @Override
-            public void onResponse(Call<MovieResult> call, Response<MovieResult> response) {
-                final List<Movie> movies = response.body().GetMovies();
+            public void onResponse(Call<TrailerResult> call, Response<TrailerResult> response) {
+                final List<Trailer> trailers = response.body().GetTrailers();
+
+                for (Trailer trailer : trailers) {
+                    trailer.setMovieId(movieId);
+                }
 
                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                     @Override
                     public void run() {
-                        popularMovieDatabase.movieDao().insertMany(movies);
+                        trailerDatabase.trailerDao().insertMany(trailers);
                     }
                 });
             }
 
             @Override
-            public void onFailure(Call<MovieResult> call, Throwable t) {
+            public void onFailure(Call<TrailerResult> call, Throwable t) {
 
             }
         });
+
     }
+
 }

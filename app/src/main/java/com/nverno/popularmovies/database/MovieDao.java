@@ -17,11 +17,20 @@ public interface MovieDao {
     @Query("SELECT * FROM movie")
     LiveData<List<Movie>> getAll();
 
+    @Query("SELECT * FROM movie ORDER BY vote_average DESC")
+    LiveData<List<Movie>> getByRating();
+
+    @Query("SELECT * FROM movie ORDER BY popularity DESC")
+    LiveData<List<Movie>> getByPopularity();
+
     @Query("SELECT * FROM movie WHERE id = :id")
-    LiveData<Movie> loadMovieById(int id);
+    LiveData<Movie> getMovieById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMany(List<Movie> movies);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(Movie movie);
 
     @Delete
     void delete(Movie movie);
