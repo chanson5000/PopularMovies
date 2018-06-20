@@ -12,19 +12,15 @@ import java.util.List;
 
 public class FavoriteMoviesViewModel extends AndroidViewModel {
 
-    private LiveData<List<Movie>> favoriteMovies;
     private FavoriteMovieDatabase database;
 
     public FavoriteMoviesViewModel(@NonNull Application app) {
         super(app);
-        FavoriteMovieDatabase database = FavoriteMovieDatabase
-                .getInstance(this.getApplication());
-
-        favoriteMovies = database.movieDao().getAll();
+        database = FavoriteMovieDatabase.getInstance(this.getApplication());
     }
 
     public LiveData<List<Movie>> getFavoriteMovies() {
-        return favoriteMovies;
+        return database.movieDao().getAll();
     }
 
     public LiveData<Movie> getMovieById(int movieId) {

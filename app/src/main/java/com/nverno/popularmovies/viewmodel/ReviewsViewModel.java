@@ -12,17 +12,14 @@ import java.util.List;
 
 public class ReviewsViewModel extends AndroidViewModel {
 
-    private LiveData<List<Review>> reviews;
+    private ReviewDatabase database;
 
     public ReviewsViewModel(@NonNull Application app) {
         super(app);
-        ReviewDatabase database = ReviewDatabase
-                .getInstance(this.getApplication());
-
-        reviews = database.reviewDao().getAll();
+        database = ReviewDatabase.getInstance(this.getApplication());
     }
 
     public LiveData<List<Review>> getReviews() {
-        return reviews;
+        return database.reviewDao().getAll();
     }
 }

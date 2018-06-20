@@ -12,17 +12,14 @@ import java.util.List;
 
 public class TrailersViewModel extends AndroidViewModel {
 
-    private LiveData<List<Trailer>> trailers;
+    private TrailerDatabase database;
 
     public TrailersViewModel(@NonNull Application app) {
         super(app);
-        TrailerDatabase database = TrailerDatabase
-                .getInstance(this.getApplication());
-
-        trailers = database.trailerDao().getAll();
+        database = TrailerDatabase.getInstance(this.getApplication());
     }
 
     public LiveData<List<Trailer>> getTrailers() {
-        return trailers;
+        return database.trailerDao().getAll();
     }
 }

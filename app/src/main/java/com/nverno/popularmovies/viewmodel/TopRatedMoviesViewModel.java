@@ -12,18 +12,15 @@ import java.util.List;
 
 public class TopRatedMoviesViewModel extends AndroidViewModel {
 
-    private LiveData<List<Movie>> topRatedMovies;
     private TopRatedMovieDatabase database;
 
     public TopRatedMoviesViewModel(@NonNull Application app) {
         super(app);
         database = TopRatedMovieDatabase.getsInstance(this.getApplication());
-
-        topRatedMovies = database.movieDao().getByRating();
     }
 
     public LiveData<List<Movie>> getTopRatedMovies() {
-        return topRatedMovies;
+        return database.movieDao().getByRating();
     }
 
     public LiveData<Movie> getMovieById(int movieId) {

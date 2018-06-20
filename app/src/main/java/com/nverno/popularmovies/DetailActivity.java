@@ -22,6 +22,7 @@ import com.nverno.popularmovies.viewmodel.TopRatedMoviesViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,16 +59,17 @@ public class DetailActivity extends AppCompatActivity {
     private static final int SORT_TOP_RATED = 1;
     private static final int SHOW_FAVORITES = 3;
 
-    private static Movie movie;
+    private static Movie mMovie;
     private static int movieId;
     private static int sortType;
+    private Context mContext;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
-        final Context mContext = this;
+        mContext = this;
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -84,82 +86,61 @@ public class DetailActivity extends AppCompatActivity {
         getFavoriteMovies();
 
         if (sortType == SORT_POPULAR) {
-            popularMoviesViewModel = ViewModelProviders.of(this)
+            popularMoviesViewModel = ViewModelProviders
+                    .of(this)
                     .get(PopularMoviesViewModel.class);
-            popularMoviesViewModel.getPopularMovies().observe(this, new Observer<List<Movie>>() {
-                @Override
-                public void onChanged(@Nullable List<Movie> movies) {
-
-                    if (movies != null) {
-
-                        for (Movie letMovie : movies) {
-                            if (letMovie.getId() == movieId) {
-                                movie = letMovie;
+            popularMoviesViewModel.getMovieById(movieId)
+                    .observe(this, new Observer<Movie>() {
+                        @Override
+                        public void onChanged(@Nullable Movie movie) {
+                            if (movie == null) {
+                                return;
                             }
+                            mMovie = movie;
+                            setViews(movie);
                         }
-
-                        Picasso.with(mContext).load(movie.getPosterImage()).into(moviePosterDetail);
-
-                        movieTitleDetail.setText(movie.getTitle());
-                        movieRatingDetail.setText(Double.toString(movie.getVote_average()));
-                        movieReleaseDetail.setText(movie.getRelease_date());
-                        movieDescriptionDetail.setText(movie.getOverview());
-
-
-                    }
-                }
-            });
+                    });
         } else if (sortType == SORT_TOP_RATED) {
             topRatedMoviesViewModel = ViewModelProviders.of(this)
                     .get(TopRatedMoviesViewModel.class);
-            topRatedMoviesViewModel.getTopRatedMovies().observe(this, new Observer<List<Movie>>() {
-                @Override
-                public void onChanged(@Nullable List<Movie> movies) {
-
-                    if (movies != null) {
-
-                        for (Movie letMovie : movies) {
-                            if (letMovie.getId() == movieId) {
-                                movie = letMovie;
+            topRatedMoviesViewModel.getMovieById(movieId)
+                    .observe(this, new Observer<Movie>() {
+                        @Override
+                        public void onChanged(@Nullable Movie movie) {
+                            if (movie == null) {
+                                return;
                             }
+                            mMovie = movie;
+                            setViews(movie);
                         }
-                    }
-
-                    Picasso.with(mContext).load(movie.getPosterImage()).into(moviePosterDetail);
-
-                    movieTitleDetail.setText(movie.getTitle());
-                    movieRatingDetail.setText(Double.toString(movie.getVote_average()));
-                    movieReleaseDetail.setText(movie.getRelease_date());
-                    movieDescriptionDetail.setText(movie.getOverview());
-                }
-            });
+                    });
         } else {
             favoriteMoviesViewModel = ViewModelProviders.of(this)
                     .get(FavoriteMoviesViewModel.class);
-            favoriteMoviesViewModel.getFavoriteMovies().observe(this, new Observer<List<Movie>>() {
-                @Override
-                public void onChanged(@Nullable List<Movie> movies) {
-                    if (movies != null) {
-                        for (Movie letMovie : movies) {
-                            if (letMovie.getId() == movieId) {
-                                movie = letMovie;
+            favoriteMoviesViewModel.getMovieById(movieId)
+                    .observe(this, new Observer<Movie>() {
+                        @Override
+                        public void onChanged(@Nullable Movie movie) {
+                            if (movie == null) {
+                                return;
                             }
+                            mMovie = movie;
+                            setViews(movie);
                         }
-                    }
-
-                    Picasso.with(mContext).load(movie.getPosterImage()).into(moviePosterDetail);
-
-                    movieTitleDetail.setText(movie.getTitle());
-                    movieRatingDetail.setText(Double.toString(movie.getVote_average()));
-                    movieReleaseDetail.setText(movie.getRelease_date());
-                    movieDescriptionDetail.setText(movie.getOverview());
-                }
-            });
-
-
+                    });
         }
     }
 
+    private void setViews(Movie movie) {
+        Picasso.with(mContext).load(movie.getPosterImage()).into(moviePosterDetail);
+
+        movieTitleDetail.setText(movie.getTitle());
+        movieRatingDetail.setText(String.format(Locale.getDefault(),
+                "%.2f",
+                movie.getVote_average()));
+        movieReleaseDetail.setText(movie.getRelease_date());
+        movieDescriptionDetail.setText(movie.getOverview());
+    }
 
     private void getFavoriteMovies() {
         favoriteMoviesViewModel = ViewModelProviders.of(this)
@@ -194,35 +175,30 @@ public class DetailActivity extends AppCompatActivity {
         if (checkIfFavorite(movieId, favoriteMovies)) {
             mFavoriteMovie.setTypeface(null, Typeface.NORMAL);
 
-            favoriteMovieRepository.removeFavoriteMovie(favoriteMovieDatabase, movie);
+            favoriteMovieRepository.removeFavoriteMovie(favoriteMovieDatabase, mMovie);
         } else {
             mFavoriteMovie.setTypeface(null, Typeface.BOLD);
 
-            favoriteMovieRepository.addFavoriteMovie(favoriteMovieDatabase, movie);
+            favoriteMovieRepository.addFavoriteMovie(favoriteMovieDatabase, mMovie);
         }
     }
 
     public void showReviews(View view) {
-        Context context = this;
-
         Class destinationClass = ReviewActivity.class;
-        Intent intentToStartReviewActivity = new Intent(context, destinationClass);
+        Intent intentToStartReviewActivity = new Intent(this, destinationClass);
 
-        intentToStartReviewActivity.putExtra(MOVIE_ID, movie.getId());
-        intentToStartReviewActivity.putExtra(MOVIE_TITLE, movie.getTitle());
+        intentToStartReviewActivity.putExtra(MOVIE_ID, mMovie.getId());
+        intentToStartReviewActivity.putExtra(MOVIE_TITLE, mMovie.getTitle());
 
         startActivity(intentToStartReviewActivity);
     }
 
     public void showTrailers(View view) {
-        Context context = this;
-
         Class destinationClass = TrailerActivity.class;
+        Intent intentToStartTrailerActivity = new Intent(this, destinationClass);
 
-        Intent intentToStartTrailerActivity = new Intent(context, destinationClass);
-
-        intentToStartTrailerActivity.putExtra(MOVIE_ID, movie.getId());
-        intentToStartTrailerActivity.putExtra(MOVIE_TITLE, movie.getTitle());
+        intentToStartTrailerActivity.putExtra(MOVIE_ID, mMovie.getId());
+        intentToStartTrailerActivity.putExtra(MOVIE_TITLE, mMovie.getTitle());
 
         startActivity(intentToStartTrailerActivity);
     }
