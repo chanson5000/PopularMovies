@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.nverno.popularmovies.database.ReviewDatabase;
-import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.model.Review;
 import com.nverno.popularmovies.model.ReviewResult;
 import com.nverno.popularmovies.moviedb.MovieDbApi;

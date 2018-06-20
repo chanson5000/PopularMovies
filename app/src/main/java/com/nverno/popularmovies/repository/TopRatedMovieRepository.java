@@ -10,7 +10,6 @@ import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.model.MovieResult;
 import com.nverno.popularmovies.moviedb.MovieDbApi;
 import com.nverno.popularmovies.util.AppExecutors;
-import com.nverno.popularmovies.viewmodel.PopularMoviesViewModel;
 
 import java.util.List;
 

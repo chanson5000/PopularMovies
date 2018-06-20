@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nverno.popularmovies.database.FavoriteMovieDatabase;
 import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.repository.FavoriteMovieRepository;
 import com.nverno.popularmovies.viewmodel.FavoriteMoviesViewModel;

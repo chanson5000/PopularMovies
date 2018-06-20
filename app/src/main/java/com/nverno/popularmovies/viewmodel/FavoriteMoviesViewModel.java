@@ -5,7 +5,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
-import com.nverno.popularmovies.database.FavoriteMovieDatabase;
 import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.repository.FavoriteMovieRepository;
 

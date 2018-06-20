@@ -17,7 +17,6 @@ import com.nverno.popularmovies.adapter.TrailerAdapter;
 import com.nverno.popularmovies.model.Trailer;
 import com.nverno.popularmovies.viewmodel.TrailersViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
