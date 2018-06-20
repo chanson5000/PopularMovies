@@ -63,8 +63,10 @@ public class TrailerActivity extends AppCompatActivity implements
                 && intentThatStartedThisActivity.hasExtra(MOVIE_TITLE)) {
 
             Bundle bundle = intentThatStartedThisActivity.getExtras();
-            mMovieTitle.setText(bundle.getString(MOVIE_TITLE));
-            setTrailersView(bundle.getInt(MOVIE_ID));
+            if (bundle != null) {
+                mMovieTitle.setText(bundle.getString(MOVIE_TITLE));
+                setTrailersView(bundle.getInt(MOVIE_ID));
+            }
         }
     }
 
@@ -72,35 +74,27 @@ public class TrailerActivity extends AppCompatActivity implements
         TrailersViewModel trailersViewModel = ViewModelProviders.of(this)
                 .get(TrailersViewModel.class);
 
-        trailersViewModel.getTrailers().observe(this, new Observer<List<Trailer>>() {
-            @Override
-            public void onChanged(@Nullable List<Trailer> trailers) {
-
-                List<Trailer> adapterTrailers = new ArrayList<>();
-
-                for (Trailer trailer : trailers) {
-                    if (trailer.getMovieId() == movieId) {
-                        adapterTrailers.add(trailer);
+        trailersViewModel.getTrailersByMovieId(movieId)
+                .observe(this, new Observer<List<Trailer>>() {
+                    @Override
+                    public void onChanged(@Nullable List<Trailer> trailers) {
+                        if (trailers == null || trailers.isEmpty()) {
+                            mTrailerHeader.setVisibility(View.INVISIBLE);
+                            mNoTrailers.setVisibility(View.VISIBLE);
+                        } else {
+                            mTrailerAdapter.setTrailersData(trailers);
+                        }
                     }
-                }
-
-                if (adapterTrailers.isEmpty()) {
-                    mTrailerHeader.setVisibility(View.INVISIBLE);
-                    mNoTrailers.setVisibility(View.VISIBLE);
-
-                    return;
-                }
-
-                mTrailerAdapter.setTrailersData(adapterTrailers);
-            }
-        });
+                });
     }
 
     @Override
     public void onClick(Trailer trailer) {
 
-        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + trailer.getKey()));
-        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailer.getTrailer()));
+        Intent appIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("vnd.youtube:" + trailer.getKey()));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse(trailer.getTrailer()));
 
         try {
             startActivity(appIntent);

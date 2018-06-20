@@ -54,8 +54,6 @@ public class ReviewActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(mReviewAdapter);
 
-        final Context mContext = this;
-
         Intent intentThatStartedThisActivity = getIntent();
 
         if (intentThatStartedThisActivity != null
@@ -63,39 +61,29 @@ public class ReviewActivity extends AppCompatActivity {
                 && intentThatStartedThisActivity.hasExtra(MOVIE_TITLE)) {
 
             Bundle bundle = intentThatStartedThisActivity.getExtras();
-            mMovieTitle.setText(bundle.getString(MOVIE_TITLE));
-            setReviewsView(bundle.getInt(MOVIE_ID));
-        }
 
+            if (bundle != null) {
+                mMovieTitle.setText(bundle.getString(MOVIE_TITLE));
+                setReviewsView(bundle.getInt(MOVIE_ID));
+            }
+        }
     }
 
     private void setReviewsView(final int movieId) {
         ReviewsViewModel reviewsViewModel = ViewModelProviders.of(this)
                 .get(ReviewsViewModel.class);
 
-        reviewsViewModel.getReviews().observe(this, new Observer<List<Review>>() {
-            @Override
-            public void onChanged(@Nullable List<Review> reviews) {
-
-
-                List<Review> adapterReviews = new ArrayList<>();
-
-                for (Review review : reviews) {
-                    if (review.getMovieId() == movieId) {
-                        adapterReviews.add(review);
+        reviewsViewModel.getReviewsByMovieId(movieId)
+                .observe(this, new Observer<List<Review>>() {
+                    @Override
+                    public void onChanged(@Nullable List<Review> reviews) {
+                        if (reviews == null || reviews.isEmpty()) {
+                            mReviewHeader.setVisibility(View.INVISIBLE);
+                            mNoReviews.setVisibility(View.VISIBLE);
+                        } else {
+                            mReviewAdapter.setReviewsData(reviews);
+                        }
                     }
-                }
-
-                if (adapterReviews.isEmpty()) {
-                    mReviewHeader.setVisibility(View.INVISIBLE);
-                    mNoReviews.setVisibility(View.VISIBLE);
-
-                    return;
-                }
-
-                mReviewAdapter.setReviewsData(adapterReviews);
-            }
-        });
+                });
     }
-
 }
