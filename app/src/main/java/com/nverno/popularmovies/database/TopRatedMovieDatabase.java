@@ -13,15 +13,14 @@ public abstract class TopRatedMovieDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = TopRatedMovieDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();
-    private static final String DATABASE_NAME = "topRatedMovies";
     private static TopRatedMovieDatabase sInstance;
 
     public static TopRatedMovieDatabase getsInstance(Context context) {
         if (sInstance == null) {
             synchronized (LOCK) {
                 Log.d(LOG_TAG, "Creating new Top Rated Movies database instance");
-                sInstance = Room.databaseBuilder(context.getApplicationContext(),
-                        TopRatedMovieDatabase.class, TopRatedMovieDatabase.DATABASE_NAME)
+                sInstance = Room.inMemoryDatabaseBuilder(context.getApplicationContext(),
+                        TopRatedMovieDatabase.class)
                         .build();
             }
         }
