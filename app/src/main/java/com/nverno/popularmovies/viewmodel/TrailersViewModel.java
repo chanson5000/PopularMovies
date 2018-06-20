@@ -22,4 +22,8 @@ public class TrailersViewModel extends AndroidViewModel {
     public LiveData<List<Trailer>> getTrailers() {
         return database.trailerDao().getAll();
     }
+
+    public LiveData<List<Trailer>> getTrailersByMovieId(int movieId) {
+        return database.trailerDao().getByMovieId(movieId);
+    }
 }

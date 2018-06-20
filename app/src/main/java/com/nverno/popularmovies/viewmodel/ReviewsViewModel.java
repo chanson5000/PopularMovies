@@ -22,4 +22,8 @@ public class ReviewsViewModel extends AndroidViewModel {
     public LiveData<List<Review>> getReviews() {
         return database.reviewDao().getAll();
     }
+
+    public LiveData<List<Review>> getReviewsByMovieId(int movieId) {
+        return database.reviewDao().getByMovieId(movieId);
+    }
 }
