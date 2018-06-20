@@ -14,6 +14,7 @@ import java.util.List;
 public class TopRatedMoviesViewModel extends AndroidViewModel {
 
     private TopRatedMovieRepository topRatedMovieRepository;
+
     private LiveData<List<Movie>> movies;
     private LiveData<Movie> selectedMovie;
 

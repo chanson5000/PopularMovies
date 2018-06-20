@@ -36,7 +36,7 @@ public class TrailerRepository {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        MovieDbApi movieDbApi = retrofit.create(MovieDbApi.class);
+        final MovieDbApi movieDbApi = retrofit.create(MovieDbApi.class);
 
         Call<TrailerResult> call = movieDbApi.trailers(movieId);
 
@@ -48,6 +48,8 @@ public class TrailerRepository {
                     Log.e(LOG_TAG, response.body().GetStatusMessage());
                 } else if (response.code() == 200) {
                     final List<Trailer> trailers = response.body().GetTrailers();
+
+                    Log.d(LOG_TAG, "Loading Trailer Data from web for: " + movieId);
 
                     for (Trailer trailer : trailers) {
                         trailer.setMovieId(movieId);

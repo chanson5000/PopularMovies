@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.nverno.popularmovies.database.ReviewDatabase;
+import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.model.Review;
 import com.nverno.popularmovies.model.ReviewResult;
 import com.nverno.popularmovies.moviedb.MovieDbApi;
@@ -49,6 +50,8 @@ public class ReviewRepository {
                     Log.e(LOG_TAG, response.body().GetStatusMessage());
                 } else if (response.code() == 200) {
                     final List<Review> reviews = response.body().GetReviews();
+
+                    Log.d(LOG_TAG, "Loading Review Data from web for: " + movieId);
 
                     for (Review review : reviews) {
                         review.setMovieId(movieId);

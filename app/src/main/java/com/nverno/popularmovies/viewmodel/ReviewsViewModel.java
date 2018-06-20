@@ -5,7 +5,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
-import com.nverno.popularmovies.database.ReviewDatabase;
 import com.nverno.popularmovies.model.Review;
 import com.nverno.popularmovies.repository.ReviewRepository;
 
@@ -15,6 +14,8 @@ public class ReviewsViewModel extends AndroidViewModel {
 
     private ReviewRepository reviewRepository;
 
+    private LiveData<List<Review>> reviews;
+
     public ReviewsViewModel(@NonNull Application app) {
         super(app);
 
@@ -22,6 +23,12 @@ public class ReviewsViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Review>> getReviewsByMovieId(int movieId) {
-        return reviewRepository.getReviewsByMovieId(movieId);
+        loadReviews(movieId);
+
+        return reviews;
+    }
+
+    private void loadReviews(int movieId) {
+        reviews = reviewRepository.getReviewsByMovieId(movieId);
     }
 }

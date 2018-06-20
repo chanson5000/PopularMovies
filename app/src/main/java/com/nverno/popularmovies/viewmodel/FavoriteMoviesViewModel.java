@@ -15,17 +15,32 @@ public class FavoriteMoviesViewModel extends AndroidViewModel {
 
     private FavoriteMovieRepository favoriteMovieRepository;
 
+    private LiveData<List<Movie>> movies;
+    private LiveData<Movie> selectedMovie;
+
     public FavoriteMoviesViewModel(@NonNull Application app) {
         super(app);
 
         favoriteMovieRepository = new FavoriteMovieRepository(this.getApplication());
+
+        movies = favoriteMovieRepository.getFavoriteMovies();
     }
 
     public LiveData<List<Movie>> getFavoriteMovies() {
-        return favoriteMovieRepository.getFavoriteMovies();
+        return movies;
     }
 
     public LiveData<Movie> getMovieById(int movieId) {
-        return favoriteMovieRepository.getMovieById(movieId);
+        loadSelectedMovie(movieId);
+
+        return selectedMovie;
+    }
+
+    private void loadSelectedMovie(int movieId) {
+        selectedMovie = favoriteMovieRepository.getMovieById(movieId);
+    }
+
+    public LiveData<Movie> getSelectedMovie() {
+        return selectedMovie;
     }
 }

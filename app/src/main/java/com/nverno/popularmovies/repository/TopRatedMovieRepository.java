@@ -34,10 +34,10 @@ public class TopRatedMovieRepository {
         cacheWebData();
     }
 
-    public void cacheWebData() {
+    private void cacheWebData() {
 
         if (databaseUpdated) {
-            Log.d(LOG_TAG, "Skipped fecthing Top Rated Movie data from the internet");
+            Log.d(LOG_TAG, "Skipped fetching Top Rated Movie data from the internet");
             return;
         }
 
@@ -60,12 +60,15 @@ public class TopRatedMovieRepository {
                 } else if (response.code() == 200) {
                     final List<Movie> movies = response.body().GetMovies();
 
+                    Log.d(LOG_TAG, "Loading Top Rated Movie data from the internet");
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
                             topRatedMovieDatabase.movieDao().insertMany(movies);
                         }
                     });
+
+                    databaseUpdated = true;
                 } else {
                     Log.e(LOG_TAG,
                             "Failed to retrieve Top Rated Movie data from the internet.");

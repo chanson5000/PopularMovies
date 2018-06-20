@@ -48,7 +48,7 @@ public class ReviewActivity extends AppCompatActivity {
 
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setHasFixedSize(true);
 
         mReviewAdapter = new ReviewAdapter(this);
 

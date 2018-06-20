@@ -63,6 +63,7 @@ public class TrailerActivity extends AppCompatActivity implements
                 && intentThatStartedThisActivity.hasExtra(MOVIE_TITLE)) {
 
             Bundle bundle = intentThatStartedThisActivity.getExtras();
+
             if (bundle != null) {
                 mMovieTitle.setText(bundle.getString(MOVIE_TITLE));
                 setTrailersView(bundle.getInt(MOVIE_ID));
