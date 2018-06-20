@@ -128,4 +128,17 @@ public class DetailActivity extends AppCompatActivity {
 
         startActivity(intentToStartReviewActivity);
     }
+
+    public void showTrailers(View view) {
+        Context context = this;
+
+        Class destinationClass = TrailerActivity.class;
+
+        Intent intentToStartTrailerActivity = new Intent(context, destinationClass);
+
+        intentToStartTrailerActivity.putExtra(MOVIE_ID, movie.getId());
+        intentToStartTrailerActivity.putExtra(MOVIE_TITLE,movie.getTitle());
+
+        startActivity(intentToStartTrailerActivity);
+    }
 }
