@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.nverno.popularmovies.adapter.ReviewAdapter;
 import com.nverno.popularmovies.model.Review;
 import com.nverno.popularmovies.viewmodel.ReviewsViewModel;
 

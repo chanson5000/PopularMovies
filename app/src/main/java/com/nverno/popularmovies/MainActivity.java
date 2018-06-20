@@ -14,13 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.nverno.popularmovies.database.FavoriteMovieDatabase;
+import com.nverno.popularmovies.adapter.PosterAdapter;
 import com.nverno.popularmovies.database.PopularMovieDatabase;
 import com.nverno.popularmovies.database.ReviewDatabase;
 import com.nverno.popularmovies.database.TopRatedMovieDatabase;
 import com.nverno.popularmovies.database.TrailerDatabase;
 import com.nverno.popularmovies.model.Movie;
-import com.nverno.popularmovies.repository.FavoriteMovieRepository;
 import com.nverno.popularmovies.repository.PopularMovieRepository;
 import com.nverno.popularmovies.repository.ReviewRepository;
 import com.nverno.popularmovies.repository.TopRatedMovieRepository;

@@ -3,7 +3,6 @@ package com.nverno.popularmovies;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.nverno.popularmovies.adapter.TrailerAdapter;
 import com.nverno.popularmovies.model.Trailer;
 import com.nverno.popularmovies.viewmodel.TrailersViewModel;
 
