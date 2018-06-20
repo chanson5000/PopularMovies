@@ -7,23 +7,21 @@ import android.support.annotation.NonNull;
 
 import com.nverno.popularmovies.database.TrailerDatabase;
 import com.nverno.popularmovies.model.Trailer;
+import com.nverno.popularmovies.repository.TrailerRepository;
 
 import java.util.List;
 
 public class TrailersViewModel extends AndroidViewModel {
 
-    private TrailerDatabase database;
+    private TrailerRepository trailerRepository;
 
     public TrailersViewModel(@NonNull Application app) {
         super(app);
-        database = TrailerDatabase.getInstance(this.getApplication());
-    }
 
-    public LiveData<List<Trailer>> getTrailers() {
-        return database.trailerDao().getAll();
+        trailerRepository = new TrailerRepository(this.getApplication());
     }
 
     public LiveData<List<Trailer>> getTrailersByMovieId(int movieId) {
-        return database.trailerDao().getByMovieId(movieId);
+        return trailerRepository.getTrailersByMovieId(movieId);
     }
 }

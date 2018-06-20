@@ -1,5 +1,6 @@
 package com.nverno.popularmovies.repository;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -72,5 +73,9 @@ public class ReviewRepository {
                         "Failed to retrieve Review data from the internet.");
             }
         });
+    }
+
+    public LiveData<List<Review>> getReviewsByMovieId(int movieId) {
+        return reviewDatabase.reviewDao().getByMovieId(movieId);
     }
 }

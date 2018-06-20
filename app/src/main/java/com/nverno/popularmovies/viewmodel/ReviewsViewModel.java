@@ -7,23 +7,21 @@ import android.support.annotation.NonNull;
 
 import com.nverno.popularmovies.database.ReviewDatabase;
 import com.nverno.popularmovies.model.Review;
+import com.nverno.popularmovies.repository.ReviewRepository;
 
 import java.util.List;
 
 public class ReviewsViewModel extends AndroidViewModel {
 
-    private ReviewDatabase database;
+    private ReviewRepository reviewRepository;
 
     public ReviewsViewModel(@NonNull Application app) {
         super(app);
-        database = ReviewDatabase.getInstance(this.getApplication());
-    }
 
-    public LiveData<List<Review>> getReviews() {
-        return database.reviewDao().getAll();
+        reviewRepository = new ReviewRepository(this.getApplication());
     }
 
     public LiveData<List<Review>> getReviewsByMovieId(int movieId) {
-        return database.reviewDao().getByMovieId(movieId);
+        return reviewRepository.getReviewsByMovieId(movieId);
     }
 }

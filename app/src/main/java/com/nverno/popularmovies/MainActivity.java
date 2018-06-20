@@ -246,6 +246,6 @@ public class MainActivity extends AppCompatActivity implements
         reviewRepository.fetchMovieReviewsFromWeb(movieId);
 
         TrailerRepository trailerRepository = new TrailerRepository(getApplicationContext());
-        trailerRepository.loadMovieTrailers(movieId);
+        trailerRepository.fetchMovieTrailersFromWeb(movieId);
     }
 }

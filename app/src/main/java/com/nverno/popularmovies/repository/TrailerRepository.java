@@ -1,5 +1,6 @@
 package com.nverno.popularmovies.repository;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -28,7 +29,7 @@ public class TrailerRepository {
         trailerDatabase = TrailerDatabase.getInstance(context);
     }
 
-    public void loadMovieTrailers(final int movieId) {
+    public void fetchMovieTrailersFromWeb(final int movieId) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.themoviedb.org/")
@@ -73,4 +74,7 @@ public class TrailerRepository {
         });
     }
 
+    public LiveData<List<Trailer>> getTrailersByMovieId(int movieId) {
+        return trailerDatabase.trailerDao().getByMovieId(movieId);
+    }
 }
