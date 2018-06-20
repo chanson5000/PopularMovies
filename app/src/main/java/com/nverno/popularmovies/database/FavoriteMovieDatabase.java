@@ -9,7 +9,7 @@ import android.util.Log;
 import com.nverno.popularmovies.model.Movie;
 
 @Database(entities = {Movie.class}, version = 1, exportSchema = false)
-public abstract class FavoriteMovieDatabase extends RoomDatabase {
+public abstract class  FavoriteMovieDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = FavoriteMovieDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();

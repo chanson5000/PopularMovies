@@ -14,15 +14,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.nverno.popularmovies.database.FavoriteMovieDatabase;
 import com.nverno.popularmovies.database.PopularMovieDatabase;
 import com.nverno.popularmovies.database.ReviewDatabase;
 import com.nverno.popularmovies.database.TopRatedMovieDatabase;
 import com.nverno.popularmovies.database.TrailerDatabase;
 import com.nverno.popularmovies.model.Movie;
+import com.nverno.popularmovies.repository.FavoriteMovieRepository;
 import com.nverno.popularmovies.repository.PopularMovieRepository;
 import com.nverno.popularmovies.repository.ReviewRepository;
 import com.nverno.popularmovies.repository.TopRatedMovieRepository;
 import com.nverno.popularmovies.repository.TrailerRepository;
+import com.nverno.popularmovies.viewmodel.FavoriteMoviesViewModel;
 import com.nverno.popularmovies.viewmodel.PopularMoviesViewModel;
 import com.nverno.popularmovies.viewmodel.TopRatedMoviesViewModel;
 
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements
     // To identify our sort types.
     private static final int SORT_POPULAR = 0;
     private static final int SORT_TOP_RATED = 1;
+    private static final int SHOW_FAVORITES = 3;
 
     // A persistent way to keep track of our sort type.
     private static int sMovieSortType;
@@ -68,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.setLayoutManager(layoutManager);
 
         // Improves performance if changes in content do not change the child layout size.
-        mRecyclerView.setHasFixedSize(true);
+//        mRecyclerView.setHasFixedSize(true);
 
         // The PosterAdapter links our poster images with the views that display them.
         mPosterAdapter = new PosterAdapter(this,this);
@@ -110,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setTopRatedMoviesView() {
-        TopRatedMoviesViewModel topRatedMoviesViewModel= ViewModelProviders.of(this)
+        TopRatedMoviesViewModel topRatedMoviesViewModel = ViewModelProviders.of(this)
                 .get(TopRatedMoviesViewModel.class);
 
         topRatedMoviesViewModel.getTopRatedMovies().observe(this, new Observer<List<Movie>>() {
@@ -122,11 +126,26 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+    private void setFavoriteMoviesView() {
+        FavoriteMoviesViewModel favoriteMoviesViewModel = ViewModelProviders.of(this)
+                .get(FavoriteMoviesViewModel.class);
+
+        favoriteMoviesViewModel.getFavoriteMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                mLoadingSpinner.setVisibility(View.INVISIBLE);
+                mPosterAdapter.setPosterData(movies);
+            }
+        });
+    }
+
     private void initializeMoviesViewModel() {
         if (sMovieSortType == SORT_POPULAR) {
             setPopularMoviesView();
-        } else {
+        } else if (sMovieSortType == SORT_TOP_RATED) {
             setTopRatedMoviesView();
+        } else {
+            setFavoriteMoviesView();
         }
     }
 
@@ -162,10 +181,12 @@ public class MainActivity extends AppCompatActivity implements
         getMenuInflater().inflate(R.menu.main, menu);
 
         // Sort by most popular is default and checked.
-        if (sMovieSortType == 0) {
+        if (sMovieSortType == SORT_POPULAR) {
             menu.findItem(R.id.sort_by_most_popular).setChecked(true);
-        } else {
+        } else if (sMovieSortType == SORT_TOP_RATED){
             menu.findItem(R.id.sort_by_top_rated).setChecked(true);
+        } else {
+            menu.findItem(R.id.show_favorites).setChecked(true);
         }
 
         return true;
@@ -193,6 +214,16 @@ public class MainActivity extends AppCompatActivity implements
                 if (sMovieSortType != SORT_TOP_RATED) {
                     mLoadingSpinner.setVisibility(View.VISIBLE);
                     sMovieSortType = SORT_TOP_RATED;
+                    item.setChecked(true);
+                    initializeMoviesViewModel();
+                }
+                return true;
+
+                // For favorites
+            case R.id.show_favorites:
+                if (sMovieSortType != SHOW_FAVORITES) {
+                    mLoadingSpinner.setVisibility(View.VISIBLE);
+                    sMovieSortType = SHOW_FAVORITES;
                     item.setChecked(true);
                     initializeMoviesViewModel();
                 }
