@@ -21,11 +21,21 @@ public class FavoriteMovieRepository {
     }
 
     public void removeFavoriteMovie(final Movie movie) {
-        favoriteMovieDatabase.movieDao().delete(movie);
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                favoriteMovieDatabase.movieDao().delete(movie);
+            }
+        });
     }
 
     public void addFavoriteMovie(final Movie movie) {
-        favoriteMovieDatabase.movieDao().insert(movie);
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                favoriteMovieDatabase.movieDao().insert(movie);
+            }
+        });
     }
 
     public LiveData<List<Movie>> getFavoriteMovies() {
