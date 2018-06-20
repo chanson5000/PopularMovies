@@ -157,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-
     private void initializeMoviesViewModel() {
         if (sMovieSortType == SORT_POPULAR) {
             setPopularMoviesView();

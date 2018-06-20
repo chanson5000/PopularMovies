@@ -71,7 +71,6 @@ public class TrailerRepository {
                         "Failed to retrieve Trailer data from the internet.");
             }
         });
-
     }
 
 }
