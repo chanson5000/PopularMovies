@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,6 +29,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
+
+    private static final String LOG_TAG = DetailActivity.class.getSimpleName();
 
     @BindView(R.id.movie_poster_detail)
     ImageView moviePosterDetail;
@@ -79,11 +82,12 @@ public class DetailActivity extends AppCompatActivity {
 
             Bundle bundle = intentThatStartedThisActivity.getExtras();
 
-            movieId = bundle.getInt(MOVIE_ID);
-            sortType = bundle.getInt(MOVIE_SORT_TYPE);
+            if (bundle != null) {
+                movieId = bundle.getInt(MOVIE_ID);
+                sortType = bundle.getInt(MOVIE_SORT_TYPE);
+                getFavoriteMovies();
+            }
         }
-
-        getFavoriteMovies();
 
         if (sortType == SORT_POPULAR) {
             popularMoviesViewModel = ViewModelProviders
@@ -114,7 +118,7 @@ public class DetailActivity extends AppCompatActivity {
                             setViews();
                         }
                     });
-        } else {
+        } else if (sortType == SHOW_FAVORITES){
             favoriteMoviesViewModel = ViewModelProviders.of(this)
                     .get(FavoriteMoviesViewModel.class);
             favoriteMoviesViewModel.getMovieById(movieId)
@@ -128,6 +132,8 @@ public class DetailActivity extends AppCompatActivity {
                             setViews();
                         }
                     });
+        } else {
+            Log.e(LOG_TAG, "No relevant sort type information for activity.");
         }
     }
 
@@ -169,17 +175,16 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void toggleFavorite(View view) {
-        FavoriteMovieDatabase favoriteMovieDatabase = FavoriteMovieDatabase.getInstance(getApplicationContext());
-        FavoriteMovieRepository favoriteMovieRepository = new FavoriteMovieRepository();
+        FavoriteMovieRepository favoriteMovieRepository = new FavoriteMovieRepository(getApplicationContext());
 
         if (checkIfFavorite(movieId, favoriteMovies)) {
             mFavoriteMovie.setTypeface(null, Typeface.NORMAL);
 
-            favoriteMovieRepository.removeFavoriteMovie(favoriteMovieDatabase, mMovie);
+            favoriteMovieRepository.removeFavoriteMovie(mMovie);
         } else {
             mFavoriteMovie.setTypeface(null, Typeface.BOLD);
 
-            favoriteMovieRepository.addFavoriteMovie(favoriteMovieDatabase, mMovie);
+            favoriteMovieRepository.addFavoriteMovie(mMovie);
         }
     }
 
