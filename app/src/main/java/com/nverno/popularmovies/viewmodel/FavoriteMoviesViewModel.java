@@ -13,6 +13,7 @@ import java.util.List;
 public class FavoriteMoviesViewModel extends AndroidViewModel {
 
     private LiveData<List<Movie>> favoriteMovies;
+    private FavoriteMovieDatabase database;
 
     public FavoriteMoviesViewModel(@NonNull Application app) {
         super(app);
@@ -24,5 +25,9 @@ public class FavoriteMoviesViewModel extends AndroidViewModel {
 
     public LiveData<List<Movie>> getFavoriteMovies() {
         return favoriteMovies;
+    }
+
+    public LiveData<Movie> getMovieById(int movieId) {
+        return database.movieDao().getMovieById(movieId);
     }
 }

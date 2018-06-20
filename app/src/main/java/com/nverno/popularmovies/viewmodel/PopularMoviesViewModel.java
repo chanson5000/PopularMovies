@@ -13,10 +13,11 @@ import java.util.List;
 public class PopularMoviesViewModel extends AndroidViewModel {
 
     private LiveData<List<Movie>> popularMovies;
+    private PopularMovieDatabase database;
 
     public PopularMoviesViewModel(@NonNull Application app) {
         super(app);
-        PopularMovieDatabase database = PopularMovieDatabase
+        database = PopularMovieDatabase
                 .getInstance(this.getApplication());
 
         popularMovies = database.movieDao().getByPopularity();
@@ -24,5 +25,9 @@ public class PopularMoviesViewModel extends AndroidViewModel {
 
     public LiveData<List<Movie>> getPopularMovies() {
         return popularMovies;
+    }
+
+    public LiveData<Movie> getMovieById(int movieId) {
+        return database.movieDao().getMovieById(movieId);
     }
 }
