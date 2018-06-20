@@ -29,7 +29,7 @@ public class TrailerResult {
         return results;
     }
 
-    public String getStatusMessage() {
+    public String GetStatusMessage() {
         return status_message;
     }
 }
