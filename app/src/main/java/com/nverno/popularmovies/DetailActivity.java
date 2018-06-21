@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.repository.FavoriteMovieRepository;
@@ -40,7 +41,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.click_reviews)
     Button mReviewClickButton;
     @BindView(R.id.favorite_movie)
-    TextView mFavoriteMovie;
+    ToggleButton mFavoriteMovie;
 
     MoviesViewModel moviesViewModel;
 
@@ -106,10 +107,10 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable Boolean movieIsFavorite) {
                 if (movieIsFavorite != null && movieIsFavorite) {
-                    mFavoriteMovie.setTypeface(null, Typeface.BOLD);
+                    mFavoriteMovie.setChecked(true);
                     isFavoriteMovie = true;
                 } else {
-                    mFavoriteMovie.setTypeface(null, Typeface.NORMAL);
+                    mFavoriteMovie.setChecked(false);
                     isFavoriteMovie = false;
                 }
             }
@@ -122,8 +123,12 @@ public class DetailActivity extends AppCompatActivity {
 
         if (isFavoriteMovie) {
             favoriteMovieRepository.remove(mMovie);
+            Toast.makeText(this,
+                    "Removed from favorites.", Toast.LENGTH_SHORT).show();
         } else {
             favoriteMovieRepository.add(mMovie);
+            Toast.makeText(this,
+                    "Added to favorites.", Toast.LENGTH_SHORT).show();
         }
     }
 
