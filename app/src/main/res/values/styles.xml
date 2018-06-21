@@ -19,4 +19,10 @@
         <item name="android:visibility">invisible</item>
     </style>
 
+    <style name="LoadingIndicator" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>

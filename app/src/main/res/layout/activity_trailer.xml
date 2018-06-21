@@ -37,11 +37,7 @@
 
         <ProgressBar
             android:id="@+id/trailers_activity_progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            style="?android:attr/progressBarStyle"
-            android:gravity="center"
-            android:visibility="visible" />
+            style="@style/LoadingIndicator" />
 
         <TextView
             android:id="@+id/no_trailers"
