@@ -54,8 +54,11 @@ public class TrailerRepository extends Repository {
             @Override
             public void onResponse(@NonNull Call<TrailerResult> call,
                                    @NonNull Response<TrailerResult> response) {
-                if (response.code() == 401 || response.code() == 404) {
-                    Log.e(LOG_TAG, response.body().GetStatusMessage());
+
+                if (response.code() == 401) {
+                    Log.e(LOG_TAG, "Authentication failed. Please check your API key.");
+                } else if (response.code() == 404) {
+                    Log.e(LOG_TAG, "Server returned \"Not Found\" error.");
                 } else if (response.code() == 200) {
                     final List<Trailer> trailers = response.body().GetTrailers();
 

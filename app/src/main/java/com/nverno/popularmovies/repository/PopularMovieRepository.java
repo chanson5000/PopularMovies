@@ -59,8 +59,10 @@ public class PopularMovieRepository extends Repository {
             public void onResponse(@NonNull Call<MovieResult> call,
                                    @NonNull Response<MovieResult> response) {
 
-                if (response.code() == 401 || response.code() == 404) {
-                    Log.e(LOG_TAG, response.body().GetStatusMessage());
+                if (response.code() == 401) {
+                    Log.e(LOG_TAG, "Authentication failed. Please check your API key.");
+                } else if (response.code() == 404) {
+                    Log.e(LOG_TAG, "Server returned \"Not Found\" error.");
                 } else if (response.code() == 200) {
                     final List<Movie> movies = response.body().GetMovies();
 

@@ -13,23 +13,15 @@ public class TrailerResult {
     @Expose
     private List<Trailer> results;
 
-    @Expose
-    private String status_message;
-
     public int getMovieId() {
         return id;
     }
 
     public List<Trailer> GetTrailers() {
-
         if (results == null) {
             results = new ArrayList<>();
         }
 
         return results;
-    }
-
-    public String GetStatusMessage() {
-        return status_message;
     }
 }
