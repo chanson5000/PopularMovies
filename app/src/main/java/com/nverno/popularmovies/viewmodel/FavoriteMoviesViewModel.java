@@ -6,26 +6,26 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import com.nverno.popularmovies.model.Movie;
-import com.nverno.popularmovies.repository.PopularMovieRepository;
+import com.nverno.popularmovies.repository.FavoriteMovieRepository;
 
 import java.util.List;
 
-public class PopularMoviesViewModel extends AndroidViewModel {
+public class FavoriteMoviesViewModel extends AndroidViewModel {
 
-    private PopularMovieRepository popularMovieRepository;
+    private FavoriteMovieRepository favoriteMovieRepository;
 
     private LiveData<List<Movie>> movies;
     private LiveData<Movie> selectedMovie;
 
-    public PopularMoviesViewModel(@NonNull Application app) {
+    public FavoriteMoviesViewModel(@NonNull Application app) {
         super(app);
 
-        popularMovieRepository = new PopularMovieRepository(this.getApplication());
+        favoriteMovieRepository = new FavoriteMovieRepository(this.getApplication());
 
-        movies = popularMovieRepository.getPopularMoviesSorted();
+        movies = favoriteMovieRepository.getFavoriteMovies();
     }
 
-    public LiveData<List<Movie>> getPopularMovies() {
+    public LiveData<List<Movie>> getFavoriteMovies() {
         return movies;
     }
 
@@ -36,7 +36,7 @@ public class PopularMoviesViewModel extends AndroidViewModel {
     }
 
     private void loadSelectedMovie(int movieId) {
-        selectedMovie = popularMovieRepository.getPopularMovieById(movieId);
+        selectedMovie = favoriteMovieRepository.getMovieById(movieId);
     }
 
     public LiveData<Movie> getSelectedMovie() {

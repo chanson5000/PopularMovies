@@ -1,6 +1,10 @@
 package com.nverno.popularmovies.repository;
 
-import com.nverno.popularmovies.database.PopularMovieDatabase;
+import android.arch.lifecycle.LiveData;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import com.nverno.popularmovies.database.TopRatedMovieDatabase;
 import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.model.MovieResult;
@@ -17,38 +21,73 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TopRatedMovieRepository {
 
-    private MovieDbApi movieDbApi;
+    private static final String LOG_TAG = TopRatedMovieRepository.class.getSimpleName();
 
-    public TopRatedMovieRepository() {
+    private TopRatedMovieDatabase topRatedMovieDatabase;
+
+    private static boolean databaseUpdated = false;
+
+    public TopRatedMovieRepository(Context context) {
+        topRatedMovieDatabase = TopRatedMovieDatabase.getsInstance(context);
+
+        cacheWebData();
+    }
+
+    private void cacheWebData() {
+
+        if (databaseUpdated) {
+            Log.d(LOG_TAG, "Skipped fetching Top Rated Movie data from the internet");
+            return;
+        }
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.themoviedb.org/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        movieDbApi = retrofit.create(MovieDbApi.class);
-    }
-
-    public void loadTopRatedMovies(final TopRatedMovieDatabase topRatedMovieDatabase) {
+        MovieDbApi movieDbApi = retrofit.create(MovieDbApi.class);
 
         Call<MovieResult> call = movieDbApi.topRatedMovies();
 
         call.enqueue(new Callback<MovieResult>() {
             @Override
-            public void onResponse(Call<MovieResult> call, Response<MovieResult> response) {
-                final List<Movie> movies = response.body().GetMovies();
+            public void onResponse(@NonNull Call<MovieResult> call,
+                                   @NonNull Response<MovieResult> response) {
 
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        topRatedMovieDatabase.movieDao().insertMany(movies);
-                    }
-                });
+                if (response.code() == 401 || response.code() == 404) {
+                    Log.e(LOG_TAG, response.body().GetStatusMessage());
+                } else if (response.code() == 200) {
+                    final List<Movie> movies = response.body().GetMovies();
+
+                    Log.d(LOG_TAG, "Loading Top Rated Movie data from the internet");
+                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            topRatedMovieDatabase.movieDao().insertMany(movies);
+                        }
+                    });
+
+                    databaseUpdated = true;
+                } else {
+                    Log.e(LOG_TAG,
+                            "Failed to retrieve Top Rated Movie data from the internet.");
+                }
             }
 
             @Override
-            public void onFailure(Call<MovieResult> call, Throwable t) {
-
+            public void onFailure(@NonNull Call<MovieResult> call, @NonNull Throwable t) {
+                t.printStackTrace();
+                Log.e(LOG_TAG,
+                        "Failed to retrieve Top Rated Movie data from the internet.");
             }
         });
+    }
+
+    public LiveData<List<Movie>> getTopRatedMoviesSorted() {
+        return topRatedMovieDatabase.movieDao().getByRating();
+    }
+
+    public LiveData<Movie> getTopRatedMovieById(int movieId) {
+        return topRatedMovieDatabase.movieDao().getMovieById(movieId);
     }
 }

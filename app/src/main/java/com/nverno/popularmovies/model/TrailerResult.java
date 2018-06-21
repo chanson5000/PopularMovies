@@ -13,6 +13,9 @@ public class TrailerResult {
     @Expose
     private List<Trailer> results;
 
+    @Expose
+    private String status_message;
+
     public int getMovieId() {
         return id;
     }
@@ -24,5 +27,9 @@ public class TrailerResult {
         }
 
         return results;
+    }
+
+    public String GetStatusMessage() {
+        return status_message;
     }
 }

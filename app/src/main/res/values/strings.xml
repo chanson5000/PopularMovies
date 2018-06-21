@@ -10,4 +10,7 @@
     <string name="no_reviews">No Reviews…</string>
     <string name="trailers">Trailers</string>
     <string name="no_trailers">No Trailers…</string>
+    <string name="favorite">Favorite</string>
+    <string name="un_favorite">Un-Favorite</string>
+    <string name="no_favorites">No Favorites…</string>
 </resources>

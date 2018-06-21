@@ -13,6 +13,9 @@ public class ReviewResult {
     @Expose
     private List<Review> results;
 
+    @Expose
+    private String status_message;
+
     public int getMovieId() {
         return id;
     }
@@ -24,5 +27,9 @@ public class ReviewResult {
         }
 
         return results;
+    }
+
+    public String GetStatusMessage() {
+        return status_message;
     }
 }
