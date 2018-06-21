@@ -88,7 +88,7 @@ public class ReviewRepository extends Repository {
         });
     }
 
-    public LiveData<List<Review>> getAllReviews() {
+    public LiveData<List<Review>> getAll() {
         return reviewDatabase.reviewDao().getAll();
     }
 }

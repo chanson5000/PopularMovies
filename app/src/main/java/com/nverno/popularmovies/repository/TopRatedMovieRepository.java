@@ -84,7 +84,7 @@ public class TopRatedMovieRepository extends Repository {
         });
     }
 
-    public LiveData<List<Movie>> getTopRatedMoviesSorted() {
+    public LiveData<List<Movie>> getAllSorted() {
         return topRatedMovieDatabase.movieDao().getAllSortedByRating();
     }
 }

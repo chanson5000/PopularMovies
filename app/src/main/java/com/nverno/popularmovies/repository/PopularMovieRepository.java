@@ -33,7 +33,6 @@ public class PopularMovieRepository extends Repository {
         mContext = context;
 
         cacheWebData();
-
     }
 
     // Fetch popular movies from TheMovieDb.Org for cache into our database.
@@ -89,7 +88,7 @@ public class PopularMovieRepository extends Repository {
         });
     }
 
-    public LiveData<List<Movie>> getPopularMoviesSorted() {
+    public LiveData<List<Movie>> getAllSorted() {
         return popularMovieDatabase.movieDao().getAllSortedByPopularity();
     }
 }

@@ -40,8 +40,8 @@ public class MoviesViewModel extends AndroidViewModel {
         TopRatedMovieRepository topRatedMovieRepository = new TopRatedMovieRepository(this.getApplication());
         FavoriteMovieRepository favoriteMovieRepository = new FavoriteMovieRepository(this.getApplication());
 
-        popularMovies = popularMovieRepository.getPopularMoviesSorted();
-        topRatedMovies = topRatedMovieRepository.getTopRatedMoviesSorted();
+        popularMovies = popularMovieRepository.getAllSorted();
+        topRatedMovies = topRatedMovieRepository.getAllSorted();
         favoriteMovies = favoriteMovieRepository.getAll();
 
         selectedMovies = new MediatorLiveData<>();

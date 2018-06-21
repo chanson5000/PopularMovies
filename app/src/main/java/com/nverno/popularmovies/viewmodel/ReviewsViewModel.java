@@ -25,7 +25,7 @@ public class ReviewsViewModel extends AndroidViewModel {
 
         reviewRepository = new ReviewRepository(this.getApplication());
 
-        allReviews = reviewRepository.getAllReviews();
+        allReviews = reviewRepository.getAll();
     }
 
     private void setSelectedReviews(final int movieId) {
