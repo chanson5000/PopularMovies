@@ -17,8 +17,6 @@ import android.widget.TextView;
 
 import com.nverno.popularmovies.adapter.PosterAdapter;
 import com.nverno.popularmovies.model.Movie;
-import com.nverno.popularmovies.repository.ReviewRepository;
-import com.nverno.popularmovies.repository.TrailerRepository;
 import com.nverno.popularmovies.viewmodel.MoviesViewModel;
 
 import java.util.List;
@@ -90,12 +88,15 @@ public class MainActivity extends AppCompatActivity implements
         moviesViewModel.getMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
+
                 mPosterAdapter.setPosterData(movies);
-                if (movies != null && !movies.isEmpty()) {
-                    hideLoadingIndicator();
-                    hideNoFavorites();
-                } else if (moviesViewModel.isFavoriteMoviesList()) {
-                    showNoFavorites();
+
+                if (movies == null) {
+                    showLoadingIndicator();
+                } else if (movies.isEmpty()) {
+                    showNoMovies();
+                } else {
+                    hideAllIndicators();
                 }
             }
         });
@@ -184,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void showLoadingIndicator() {
-        hideNoFavorites();
+        hideNoMovies();
         if (mLoadingSpinner.getVisibility() == View.INVISIBLE) {
             mLoadingSpinner.setVisibility(View.VISIBLE);
         }
@@ -196,16 +197,21 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void showNoFavorites() {
+    private void showNoMovies() {
         hideLoadingIndicator();
         if (mTextNoFavorites.getVisibility() == View.INVISIBLE) {
             mTextNoFavorites.setVisibility(View.VISIBLE);
         }
     }
 
-    private void hideNoFavorites() {
+    private void hideNoMovies() {
         if (mTextNoFavorites.getVisibility() == View.VISIBLE) {
             mTextNoFavorites.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private void hideAllIndicators(){
+        hideNoMovies();
+        hideLoadingIndicator();
     }
 }

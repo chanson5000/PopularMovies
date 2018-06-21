@@ -38,6 +38,7 @@ public class ReviewRepository extends Repository {
 
         if (networkNotAvailable(mContext)) {
             Log.d(LOG_TAG, "Skipping internet data fetch, network not available.");
+            return;
         }
 
         if (retrievedReviews.contains(movieId)) {

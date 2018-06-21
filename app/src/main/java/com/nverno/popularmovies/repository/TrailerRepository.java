@@ -38,6 +38,7 @@ public class TrailerRepository extends Repository {
 
         if (networkNotAvailable(mContext)) {
             Log.d(LOG_TAG, "Skipping internet data fetch, network not available.");
+            return;
         }
 
         if (retrievedTrailers.contains(movieId)) {

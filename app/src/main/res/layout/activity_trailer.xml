@@ -35,6 +35,14 @@
             android:layout_marginRight="5dp"
             android:layout_marginStart="5dp" />
 
+        <ProgressBar
+            android:id="@+id/trailers_activity_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="?android:attr/progressBarStyle"
+            android:gravity="center"
+            android:visibility="visible" />
+
         <TextView
             android:id="@+id/no_trailers"
             android:text="@string/no_trailers"

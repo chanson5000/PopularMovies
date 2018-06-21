@@ -18,7 +18,9 @@ abstract class Repository {
 
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
-        return netInfo != null && netInfo.isConnectedOrConnecting();
+        return netInfo == null || !netInfo.isConnectedOrConnecting();
+
+//        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     MovieDbApi getMovieDbApi(Class<MovieDbApi> apiClass) {

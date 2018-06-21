@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nverno.popularmovies.adapter.ReviewAdapter;
@@ -34,6 +35,8 @@ public class ReviewActivity extends AppCompatActivity {
     TextView mMovieTitle;
     @BindView(R.id.review_header)
     TextView mReviewHeader;
+    @BindView(R.id.reviews_activity_progress_bar)
+    ProgressBar mLoadingIndicator;
 
     private static final String MOVIE_ID = "MOVIE_ID_EXTRA";
     private static final String MOVIE_TITLE = "MOVIE_NAME_EXTRA";
@@ -77,13 +80,52 @@ public class ReviewActivity extends AppCompatActivity {
                 .observe(this, new Observer<List<Review>>() {
                     @Override
                     public void onChanged(@Nullable List<Review> reviews) {
-                        if (reviews == null || reviews.isEmpty()) {
-                            mReviewHeader.setVisibility(View.INVISIBLE);
-                            mNoReviews.setVisibility(View.VISIBLE);
+                        if (reviews == null) {
+                            showLoadingIndicator();
+                        } else if (reviews.isEmpty()) {
+                            showIsNoReviews();
                         } else {
+                            hideAllIndicators();
                             mReviewAdapter.setReviewsData(reviews);
                         }
                     }
                 });
+    }
+
+    private void showLoadingIndicator() {
+        hideIsNoReviews();
+        if (mLoadingIndicator.getVisibility() == View.INVISIBLE) {
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideLoadingIndicator() {
+        if (mLoadingIndicator.getVisibility() == View.VISIBLE) {
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void showIsNoReviews() {
+        hideLoadingIndicator();
+        if (mReviewHeader.getVisibility() == View.VISIBLE) {
+            mReviewHeader.setVisibility(View.INVISIBLE);
+        }
+        if (mNoReviews.getVisibility() == View.INVISIBLE) {
+            mNoReviews.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideIsNoReviews() {
+        if (mReviewHeader.getVisibility() == View.INVISIBLE) {
+            mReviewHeader.setVisibility(View.VISIBLE);
+        }
+        if (mNoReviews.getVisibility() == View.VISIBLE) {
+            mNoReviews.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void hideAllIndicators() {
+        hideIsNoReviews();
+        hideLoadingIndicator();
     }
 }
