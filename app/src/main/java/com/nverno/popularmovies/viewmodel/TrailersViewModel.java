@@ -18,10 +18,12 @@ public class TrailersViewModel extends AndroidViewModel {
     private LiveData<List<Trailer>> allTrailers;
     private LiveData<List<Trailer>> selectedTrailers;
 
+    private TrailerRepository trailerRepository;
+
     public TrailersViewModel(@NonNull Application app) {
         super(app);
 
-        TrailerRepository trailerRepository = new TrailerRepository(this.getApplication());
+        trailerRepository = new TrailerRepository(this.getApplication());
 
         allTrailers = trailerRepository.getAll();
     }
@@ -44,7 +46,12 @@ public class TrailersViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Trailer>> getTrailers(int movieId) {
+        loadTrailerData(movieId);
         setSelectedTrailers(movieId);
         return selectedTrailers;
+    }
+
+    private void loadTrailerData(int movieId) {
+        trailerRepository.fetchMovieTrailersFromWeb(movieId);
     }
 }

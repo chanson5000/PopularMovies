@@ -18,10 +18,12 @@ public class ReviewsViewModel extends AndroidViewModel {
     private LiveData<List<Review>> allReviews;
     private LiveData<List<Review>> selectedReviews;
 
+    private ReviewRepository reviewRepository;
+
     public ReviewsViewModel(@NonNull Application app) {
         super(app);
 
-        ReviewRepository reviewRepository = new ReviewRepository(this.getApplication());
+        reviewRepository = new ReviewRepository(this.getApplication());
 
         allReviews = reviewRepository.getAllReviews();
     }
@@ -44,7 +46,12 @@ public class ReviewsViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Review>> getReviews(int movieId) {
+        loadReviewData(movieId);
         setSelectedReviews(movieId);
         return selectedReviews;
+    }
+
+    private void loadReviewData(int movieId) {
+        reviewRepository.fetchMovieReviewsFromWeb(movieId);
     }
 }
