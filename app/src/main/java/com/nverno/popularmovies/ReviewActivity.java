@@ -73,7 +73,7 @@ public class ReviewActivity extends AppCompatActivity {
         ReviewsViewModel reviewsViewModel = ViewModelProviders.of(this)
                 .get(ReviewsViewModel.class);
 
-        reviewsViewModel.getReviewsByMovieId(movieId)
+        reviewsViewModel.getReviews(movieId)
                 .observe(this, new Observer<List<Review>>() {
                     @Override
                     public void onChanged(@Nullable List<Review> reviews) {

@@ -77,7 +77,7 @@ public class ReviewRepository {
         });
     }
 
-    public LiveData<List<Review>> getReviewsByMovieId(int movieId) {
-        return reviewDatabase.reviewDao().getByMovieId(movieId);
+    public LiveData<List<Review>> getAllReviews() {
+        return reviewDatabase.reviewDao().getAll();
     }
 }
