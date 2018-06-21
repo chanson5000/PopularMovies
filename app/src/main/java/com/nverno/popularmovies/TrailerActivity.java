@@ -74,7 +74,7 @@ public class TrailerActivity extends AppCompatActivity implements
         TrailersViewModel trailersViewModel = ViewModelProviders.of(this)
                 .get(TrailersViewModel.class);
 
-        trailersViewModel.getTrailersByMovieId(movieId)
+        trailersViewModel.getTrailers(movieId)
                 .observe(this, new Observer<List<Trailer>>() {
                     @Override
                     public void onChanged(@Nullable List<Trailer> trailers) {
