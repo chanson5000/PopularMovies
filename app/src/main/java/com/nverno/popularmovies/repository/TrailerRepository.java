@@ -76,7 +76,7 @@ public class TrailerRepository {
         });
     }
 
-    public LiveData<List<Trailer>> getTrailersByMovieId(int movieId) {
-        return trailerDatabase.trailerDao().getByMovieId(movieId);
+    public LiveData<List<Trailer>> getAll() {
+        return trailerDatabase.trailerDao().getAll();
     }
 }
