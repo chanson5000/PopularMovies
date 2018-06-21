@@ -11,6 +11,7 @@ import com.nverno.popularmovies.model.ReviewResult;
 import com.nverno.popularmovies.moviedb.MovieDbApi;
 import com.nverno.popularmovies.util.AppExecutors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -25,18 +26,25 @@ public class ReviewRepository {
 
     private ReviewDatabase reviewDatabase;
 
+    private static List<Integer> retrievedReviews = new ArrayList<>();
+
     public ReviewRepository(Context context) {
         reviewDatabase = ReviewDatabase.getInstance(context);
     }
 
     public void fetchMovieReviewsFromWeb(final int movieId) {
 
+        if (retrievedReviews.contains(movieId)) {
+            Log.d(LOG_TAG, "REVIEWS - Skipped fetching internet data for: " + movieId);
+            return;
+        }
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.themoviedb.org/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        MovieDbApi movieDbApi = retrofit.create(MovieDbApi.class);
+        final MovieDbApi movieDbApi = retrofit.create(MovieDbApi.class);
 
         Call<ReviewResult> call = movieDbApi.reviews(movieId);
 
@@ -50,11 +58,13 @@ public class ReviewRepository {
                 } else if (response.code() == 200) {
                     final List<Review> reviews = response.body().GetReviews();
 
-                    Log.d(LOG_TAG, "Loading Review Data from web for: " + movieId);
+                    Log.d(LOG_TAG, "REVIEWS - Fetched internet data for: " + movieId);
 
                     for (Review review : reviews) {
                         review.setMovieId(movieId);
                     }
+
+                    retrievedReviews.add(movieId);
 
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
@@ -64,7 +74,7 @@ public class ReviewRepository {
                     });
                 } else {
                     Log.e(LOG_TAG,
-                            "Failed to retrieve Review data from the internet.");
+                            "REVIEWS - Failed to fetch internet data for: " + movieId);
                 }
             }
 
@@ -72,7 +82,7 @@ public class ReviewRepository {
             public void onFailure(@NonNull Call<ReviewResult> call, @NonNull Throwable t) {
                 t.printStackTrace();
                 Log.e(LOG_TAG,
-                        "Failed to retrieve Review data from the internet.");
+                        "REVIEWS - Failed to fetch internet data for: " + movieId);
             }
         });
     }

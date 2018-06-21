@@ -36,7 +36,7 @@ public class TopRatedMovieRepository {
     private void cacheWebData() {
 
         if (databaseUpdated) {
-            Log.d(LOG_TAG, "Skipped fetching Top Rated Movie data from the internet");
+            Log.d(LOG_TAG, "TOP RATED MOVIES - Skipped fetching internet data.");
             return;
         }
 
@@ -59,7 +59,7 @@ public class TopRatedMovieRepository {
                 } else if (response.code() == 200) {
                     final List<Movie> movies = response.body().GetMovies();
 
-                    Log.d(LOG_TAG, "Loading Top Rated Movie data from the internet");
+                    Log.d(LOG_TAG, "TOP RATED MOVIES - Fetched internet data.");
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
@@ -70,7 +70,7 @@ public class TopRatedMovieRepository {
                     databaseUpdated = true;
                 } else {
                     Log.e(LOG_TAG,
-                            "Failed to retrieve Top Rated Movie data from the internet.");
+                            "TOP RATED MOVIES - Failed to fetch internet data.");
                 }
             }
 
@@ -78,16 +78,12 @@ public class TopRatedMovieRepository {
             public void onFailure(@NonNull Call<MovieResult> call, @NonNull Throwable t) {
                 t.printStackTrace();
                 Log.e(LOG_TAG,
-                        "Failed to retrieve Top Rated Movie data from the internet.");
+                        "TOP RATED MOVIES - Failed to fetch internet data.");
             }
         });
     }
 
     public LiveData<List<Movie>> getTopRatedMoviesSorted() {
         return topRatedMovieDatabase.movieDao().getByRating();
-    }
-
-    public LiveData<Movie> getTopRatedMovieById(int movieId) {
-        return topRatedMovieDatabase.movieDao().getMovieById(movieId);
     }
 }

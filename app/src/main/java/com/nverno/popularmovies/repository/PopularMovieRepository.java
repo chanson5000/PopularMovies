@@ -37,7 +37,7 @@ public class PopularMovieRepository {
     private void cacheWebData() {
 
         if (databaseUpdated) {
-            Log.d(LOG_TAG, "Skipped fetching Popular Movie data from the internet.");
+            Log.d(LOG_TAG, "POPULAR MOVIES - Skipped fetching internet data.");
             return;
         }
 
@@ -62,7 +62,7 @@ public class PopularMovieRepository {
                 } else if (response.code() == 200) {
                     final List<Movie> movies = response.body().GetMovies();
 
-                    Log.d(LOG_TAG, "Loading Popular Movie data from the internet.");
+                    Log.d(LOG_TAG, "POPULAR MOVIES - Fetched internet data.");
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
@@ -73,7 +73,7 @@ public class PopularMovieRepository {
                     databaseUpdated = true;
                 } else {
                     Log.e(LOG_TAG,
-                            "Failed to retrieve Popular Movie data from the internet.");
+                            "POPULAR MOVIES - Failed to fetch internet data.");
                 }
             }
 
@@ -81,16 +81,12 @@ public class PopularMovieRepository {
             public void onFailure(@NonNull Call<MovieResult> call, @NonNull Throwable t) {
                 t.printStackTrace();
                 Log.e(LOG_TAG,
-                        "Failed to retrieve Popular Movie data from the internet.");
+                        "POPULAR MOVIES - Failed to fetch internet data.");
             }
         });
     }
 
     public LiveData<List<Movie>> getPopularMoviesSorted() {
         return popularMovieDatabase.movieDao().getByPopularity();
-    }
-
-    public LiveData<Movie> getPopularMovieById(int movieId) {
-        return popularMovieDatabase.movieDao().getMovieById(movieId);
     }
 }
