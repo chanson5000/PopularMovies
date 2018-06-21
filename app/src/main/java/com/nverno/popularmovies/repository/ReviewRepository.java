@@ -20,22 +20,30 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ReviewRepository {
+public class ReviewRepository extends Repository {
 
     private static final String LOG_TAG = ReviewRepository.class.getSimpleName();
 
     private ReviewDatabase reviewDatabase;
 
+    private Context mContext;
+
     private static List<Integer> retrievedReviews = new ArrayList<>();
 
     public ReviewRepository(Context context) {
         reviewDatabase = ReviewDatabase.getInstance(context);
+
+        mContext = context;
     }
 
     public void fetchMovieReviewsFromWeb(final int movieId) {
 
+        if (networkNotAvailable(mContext)) {
+            Log.d(LOG_TAG, "Skipping internet data fetch, network not available.");
+        }
+
         if (retrievedReviews.contains(movieId)) {
-            Log.d(LOG_TAG, "REVIEWS - Skipped fetching internet data for: " + movieId);
+            Log.d(LOG_TAG, "Skipped fetching internet data for: " + movieId);
             return;
         }
 
@@ -58,7 +66,7 @@ public class ReviewRepository {
                 } else if (response.code() == 200) {
                     final List<Review> reviews = response.body().GetReviews();
 
-                    Log.d(LOG_TAG, "REVIEWS - Fetched internet data for: " + movieId);
+                    Log.d(LOG_TAG, "Fetched internet data for: " + movieId);
 
                     for (Review review : reviews) {
                         review.setMovieId(movieId);
@@ -74,7 +82,7 @@ public class ReviewRepository {
                     });
                 } else {
                     Log.e(LOG_TAG,
-                            "REVIEWS - Failed to fetch internet data for: " + movieId);
+                            "Failed to fetch internet data for: " + movieId);
                 }
             }
 
@@ -82,7 +90,7 @@ public class ReviewRepository {
             public void onFailure(@NonNull Call<ReviewResult> call, @NonNull Throwable t) {
                 t.printStackTrace();
                 Log.e(LOG_TAG,
-                        "REVIEWS - Failed to fetch internet data for: " + movieId);
+                        "Failed to fetch internet data for: " + movieId);
             }
         });
     }

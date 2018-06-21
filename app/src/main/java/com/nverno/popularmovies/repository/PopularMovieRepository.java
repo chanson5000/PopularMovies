@@ -19,25 +19,35 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PopularMovieRepository {
+public class PopularMovieRepository extends Repository {
 
     private static final String LOG_TAG = PopularMovieRepository.class.getSimpleName();
 
     private PopularMovieDatabase popularMovieDatabase;
+
+    private Context mContext;
 
     private static boolean databaseUpdated = false;
 
     public PopularMovieRepository(Context context) {
         popularMovieDatabase = PopularMovieDatabase.getInstance(context);
 
+        mContext = context;
+
         cacheWebData();
+
     }
 
     // Fetch popular movies from TheMovieDb.Org for cache into our database.
     private void cacheWebData() {
 
+        if (networkNotAvailable(mContext)) {
+            Log.d(LOG_TAG, "Skipping fetch, network not available.");
+            return;
+        }
+
         if (databaseUpdated) {
-            Log.d(LOG_TAG, "POPULAR MOVIES - Skipped fetching internet data.");
+            Log.d(LOG_TAG, "Skipped fetching internet data.");
             return;
         }
 
@@ -73,7 +83,7 @@ public class PopularMovieRepository {
                     databaseUpdated = true;
                 } else {
                     Log.e(LOG_TAG,
-                            "POPULAR MOVIES - Failed to fetch internet data.");
+                            "Failed to fetch internet data.");
                 }
             }
 
@@ -81,7 +91,7 @@ public class PopularMovieRepository {
             public void onFailure(@NonNull Call<MovieResult> call, @NonNull Throwable t) {
                 t.printStackTrace();
                 Log.e(LOG_TAG,
-                        "POPULAR MOVIES - Failed to fetch internet data.");
+                        "Failed to fetch internet data.");
             }
         });
     }

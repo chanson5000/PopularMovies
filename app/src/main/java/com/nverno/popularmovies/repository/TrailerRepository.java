@@ -20,22 +20,30 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class TrailerRepository {
+public class TrailerRepository extends Repository {
 
     private static final String LOG_TAG = TrailerRepository.class.getSimpleName();
 
     private TrailerDatabase trailerDatabase;
 
+    private Context mContext;
+
     private static List<Integer> retrievedTrailers = new ArrayList<>();
 
     public TrailerRepository(Context context) {
         trailerDatabase = TrailerDatabase.getInstance(context);
+
+        mContext = context;
     }
 
     public void fetchMovieTrailersFromWeb(final int movieId) {
 
+        if (networkNotAvailable(mContext)) {
+            Log.d(LOG_TAG, "Skipping internet data fetch, network not available.");
+        }
+
         if (retrievedTrailers.contains(movieId)) {
-            Log.d(LOG_TAG, "TRAILERS - Skipped fetching internet data for: " + movieId);
+            Log.d(LOG_TAG, "Skipped fetching internet data for: " + movieId);
             return;
         }
 
@@ -57,7 +65,7 @@ public class TrailerRepository {
                 } else if (response.code() == 200) {
                     final List<Trailer> trailers = response.body().GetTrailers();
 
-                    Log.d(LOG_TAG, "Loading Trailer Data from web for: " + movieId);
+                    Log.d(LOG_TAG, "Fetched internet data for: " + movieId);
 
                     for (Trailer trailer : trailers) {
                         trailer.setMovieId(movieId);
@@ -73,7 +81,7 @@ public class TrailerRepository {
                     });
                 } else {
                     Log.e(LOG_TAG,
-                            "Failed to retrieve Trailer data from the internet.");
+                            "Failed to fetch internet data for: " + movieId);
                 }
             }
 
@@ -81,7 +89,7 @@ public class TrailerRepository {
             public void onFailure(@NonNull Call<TrailerResult> call, @NonNull Throwable t) {
                 t.printStackTrace();
                 Log.e(LOG_TAG,
-                        "Failed to retrieve Trailer data from the internet.");
+                        "Failed to fetch internet data for: " + movieId);
             }
         });
     }
