@@ -19,10 +19,7 @@ import com.nverno.popularmovies.adapter.PosterAdapter;
 import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.repository.ReviewRepository;
 import com.nverno.popularmovies.repository.TrailerRepository;
-import com.nverno.popularmovies.viewmodel.FavoriteMoviesViewModel;
 import com.nverno.popularmovies.viewmodel.MoviesViewModel;
-import com.nverno.popularmovies.viewmodel.PopularMoviesViewModel;
-import com.nverno.popularmovies.viewmodel.TopRatedMoviesViewModel;
 
 import java.util.List;
 
@@ -36,10 +33,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private PosterAdapter mPosterAdapter;
 
-    PopularMoviesViewModel popularMoviesViewModel;
-    TopRatedMoviesViewModel topRatedMoviesViewModel;
-    FavoriteMoviesViewModel favoriteMoviesViewModel;
-
     MoviesViewModel moviesViewModel;
 
     @BindView(R.id.recycler_view_posters)
@@ -52,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements
     // To identify our sort types.
     private static final int SORT_POPULAR = 0;
     private static final int SORT_TOP_RATED = 1;
-    private static final int SHOW_FAVORITES = 3;
+    private static final int SHOW_FAVORITES = 2;
 
     // A persistent way to keep track of our sort type.
     private static int sMovieSortType;
@@ -98,6 +91,12 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
                 mPosterAdapter.setPosterData(movies);
+                if (movies != null && !movies.isEmpty()) {
+                    hideLoadingIndicator();
+                    hideNoFavorites();
+                } else if (moviesViewModel.isFavoriteMoviesList()) {
+                    showNoFavorites();
+                }
             }
         });
     }
@@ -188,68 +187,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setPopularMoviesView() {
-
-        moviesViewModel.getMovies().setValue(moviesViewModel.loadPopularMovies().getValue());
-
-//        moviesViewModel = ViewModelProviders.of(this)
-//                .get(MoviesViewModel.class);
-//
-//        moviesViewModel.getMovies().observe(this, new Observer<List<Movie>>() {
-//            @Override
-//            public void onChanged(@Nullable List<Movie> movies) {
-//                mPosterAdapter.setPosterData(movies);
-//            }
-//        });
-
-//        popularMoviesViewModel = ViewModelProviders.of(this)
-//                .get(PopularMoviesViewModel.class);
-//
-//        popularMoviesViewModel.getPopularMovies().observe(this, new Observer<List<Movie>>() {
-//            @Override
-//            public void onChanged(@Nullable List<Movie> movies) {
-//                mPosterAdapter.setPosterData(movies);
-//
-//                if (movies != null && !movies.isEmpty()) {
-//                    hideLoadingIndicator();
-//                }
-//            }
-//        });
+        moviesViewModel.loadPopularMovies();
     }
 
     private void setTopRatedMoviesView() {
-        topRatedMoviesViewModel = ViewModelProviders.of(this)
-                .get(TopRatedMoviesViewModel.class);
-
-        topRatedMoviesViewModel.getTopRatedMovies().observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(@Nullable List<Movie> movies) {
-                mPosterAdapter.setPosterData(movies);
-
-                if (movies != null && !movies.isEmpty()) {
-                    hideLoadingIndicator();
-                }
-            }
-        });
+        moviesViewModel.loadTopRatedMovies();
     }
 
     private void setFavoriteMoviesView() {
-        favoriteMoviesViewModel = ViewModelProviders.of(this)
-                .get(FavoriteMoviesViewModel.class);
-
-        favoriteMoviesViewModel.getFavoriteMovies().observe(this, new Observer<List<Movie>>() {
-
-            @Override
-            public void onChanged(@Nullable List<Movie> movies) {
-                mPosterAdapter.setPosterData(movies);
-
-                if (movies == null || movies.isEmpty()) {
-                    showNoFavorites();
-                } else {
-                    hideNoFavorites();
-                    hideLoadingIndicator();
-                }
-            }
-        });
+        moviesViewModel.loadFavoriteMovies();
     }
 
     private void showLoadingIndicator() {
