@@ -121,9 +121,9 @@ public class DetailActivity extends AppCompatActivity {
                 new FavoriteMovieRepository(getApplicationContext());
 
         if (isFavoriteMovie) {
-            favoriteMovieRepository.removeFavoriteMovie(mMovie);
+            favoriteMovieRepository.remove(mMovie);
         } else {
-            favoriteMovieRepository.addFavoriteMovie(mMovie);
+            favoriteMovieRepository.add(mMovie);
         }
     }
 

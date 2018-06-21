@@ -85,6 +85,6 @@ public class TopRatedMovieRepository extends Repository {
     }
 
     public LiveData<List<Movie>> getTopRatedMoviesSorted() {
-        return topRatedMovieDatabase.movieDao().getByRating();
+        return topRatedMovieDatabase.movieDao().getAllSortedByRating();
     }
 }
