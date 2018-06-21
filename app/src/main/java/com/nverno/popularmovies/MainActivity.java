@@ -20,6 +20,7 @@ import com.nverno.popularmovies.model.Movie;
 import com.nverno.popularmovies.repository.ReviewRepository;
 import com.nverno.popularmovies.repository.TrailerRepository;
 import com.nverno.popularmovies.viewmodel.FavoriteMoviesViewModel;
+import com.nverno.popularmovies.viewmodel.MoviesViewModel;
 import com.nverno.popularmovies.viewmodel.PopularMoviesViewModel;
 import com.nverno.popularmovies.viewmodel.TopRatedMoviesViewModel;
 
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements
     PopularMoviesViewModel popularMoviesViewModel;
     TopRatedMoviesViewModel topRatedMoviesViewModel;
     FavoriteMoviesViewModel favoriteMoviesViewModel;
+
+    MoviesViewModel moviesViewModel;
 
     @BindView(R.id.recycler_view_posters)
     RecyclerView mRecyclerView;
@@ -82,7 +85,21 @@ public class MainActivity extends AppCompatActivity implements
         // Set the adapter, attaching it to the RecyclerView in the layout.
         mRecyclerView.setAdapter(mPosterAdapter);
 
+        setUpMainView();
+
         initViews();
+    }
+
+    private void setUpMainView() {
+        moviesViewModel = ViewModelProviders.of(this)
+                .get(MoviesViewModel.class);
+
+        moviesViewModel.getMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                mPosterAdapter.setPosterData(movies);
+            }
+        });
     }
 
     @Override
@@ -172,19 +189,31 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setPopularMoviesView() {
 
-        popularMoviesViewModel = ViewModelProviders.of(this)
-                .get(PopularMoviesViewModel.class);
+        moviesViewModel.getMovies().setValue(moviesViewModel.loadPopularMovies().getValue());
 
-        popularMoviesViewModel.getPopularMovies().observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(@Nullable List<Movie> movies) {
-                mPosterAdapter.setPosterData(movies);
+//        moviesViewModel = ViewModelProviders.of(this)
+//                .get(MoviesViewModel.class);
+//
+//        moviesViewModel.getMovies().observe(this, new Observer<List<Movie>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Movie> movies) {
+//                mPosterAdapter.setPosterData(movies);
+//            }
+//        });
 
-                if (movies != null && !movies.isEmpty()) {
-                    hideLoadingIndicator();
-                }
-            }
-        });
+//        popularMoviesViewModel = ViewModelProviders.of(this)
+//                .get(PopularMoviesViewModel.class);
+//
+//        popularMoviesViewModel.getPopularMovies().observe(this, new Observer<List<Movie>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Movie> movies) {
+//                mPosterAdapter.setPosterData(movies);
+//
+//                if (movies != null && !movies.isEmpty()) {
+//                    hideLoadingIndicator();
+//                }
+//            }
+//        });
     }
 
     private void setTopRatedMoviesView() {

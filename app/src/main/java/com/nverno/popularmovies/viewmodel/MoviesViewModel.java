@@ -23,16 +23,37 @@ public class MoviesViewModel extends AndroidViewModel {
     private LiveData<List<Movie>> topRatedMovies;
     private LiveData<List<Movie>> favoriteMovies;
 
-    private LiveData<List<Movie>> selectedMovies;
+    private MutableLiveData<List<Movie>> selectedMovies;
     private MutableLiveData<Movie> selectedMovie;
-
 
     public MoviesViewModel(@NonNull Application app) {
         super(app);
 
         popularMovieRepository = new PopularMovieRepository(this.getApplication());
+        topRatedMovieRepository = new TopRatedMovieRepository(this.getApplication());
+        favoriteMovieRepository = new FavoriteMovieRepository(this.getApplication());
 
+        popularMovies = popularMovieRepository.getPopularMoviesSorted();
+        topRatedMovies = topRatedMovieRepository.getTopRatedMoviesSorted();
+        favoriteMovies = favoriteMovieRepository.getFavoriteMovies();
 
+        selectedMovies = new MutableLiveData<>();
     }
+
+    public MutableLiveData<List<Movie>> getMovies() {
+        return selectedMovies;
+    }
+
+    public LiveData<List<Movie>> loadPopularMovies() {
+        return popularMovies;
+    }
+
+//    private void loadTopRatedMovies() {
+//        selectedMovies = topRatedMovies;
+//    }
+//
+//    private void loadFavoriteMovies() {
+//        selectedMovies = favoriteMovies;
+//    }
 
 }
