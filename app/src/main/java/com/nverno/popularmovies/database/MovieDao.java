@@ -18,13 +18,10 @@ public interface MovieDao {
     LiveData<List<Movie>> getAll();
 
     @Query("SELECT * FROM movie ORDER BY voteAverage DESC")
-    LiveData<List<Movie>> getByRating();
+    LiveData<List<Movie>> getAllSortedByRating();
 
     @Query("SELECT * FROM movie ORDER BY popularity DESC")
-    LiveData<List<Movie>> getByPopularity();
-
-    @Query("SELECT * FROM movie WHERE id = :id")
-    LiveData<Movie> getMovieById(int id);
+    LiveData<List<Movie>> getAllSortedByPopularity();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMany(List<Movie> movies);
