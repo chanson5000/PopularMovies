@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    style="@style/AllMatchParentVertical">
 
     <TextView
         android:id="@+id/review_movie_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:textSize="26sp" />
+        style="@style/MovieTitleHeader" />
 
     <TextView
         android:id="@+id/review_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="@string/reviews"
-        android:textAlignment="center"
-        android:textSize="22sp" />
+        style="@style/ActivityHeader" />
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        style="@style/FrameLayoutMatchParent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_reviews"

@@ -39,11 +39,7 @@
 
                 <TextView
                     android:id="@+id/movie_title_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    style="@style/DetailMovieTitle" />
 
                 <ToggleButton
                     android:id="@+id/favorite_movie"
@@ -57,34 +53,20 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginTop="10dp"
                     android:text="@string/rating"
-                    android:textSize="18sp" />
+                    style="@style/DetailActivityDetail" />
 
                 <TextView
                     android:id="@+id/movie_rating_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="20sp" />
+                    style="@style/DetailActivityDetailDescription" />
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:text="@string/release_date"
-                    android:gravity="center"
-                    android:textSize="18sp" />
+                    style="@style/DetailActivityDetail" />
 
                 <TextView
                     android:id="@+id/movie_release_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="20sp" />
+                    style="@style/DetailActivityDetailDescription" />
 
             </LinearLayout>
         </LinearLayout>
