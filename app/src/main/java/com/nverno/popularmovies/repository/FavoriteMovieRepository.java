@@ -41,8 +41,4 @@ public class FavoriteMovieRepository {
     public LiveData<List<Movie>> getFavoriteMovies() {
         return favoriteMovieDatabase.movieDao().getAll();
     }
-
-    public LiveData<Movie> getMovieById(int movieId) {
-        return favoriteMovieDatabase.movieDao().getMovieById(movieId);
-    }
 }

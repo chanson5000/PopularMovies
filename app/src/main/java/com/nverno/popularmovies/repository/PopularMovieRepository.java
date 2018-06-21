@@ -51,12 +51,7 @@ public class PopularMovieRepository extends Repository {
             return;
         }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        MovieDbApi movieDbApi = retrofit.create(MovieDbApi.class);
+        MovieDbApi movieDbApi = getMovieDbApi(MovieDbApi.class);
 
         Call<MovieResult> call = movieDbApi.popularMovies();
 

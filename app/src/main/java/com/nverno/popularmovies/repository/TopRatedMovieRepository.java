@@ -16,8 +16,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TopRatedMovieRepository extends Repository {
 
@@ -48,12 +46,7 @@ public class TopRatedMovieRepository extends Repository {
             return;
         }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        MovieDbApi movieDbApi = retrofit.create(MovieDbApi.class);
+        MovieDbApi movieDbApi = getMovieDbApi(MovieDbApi.class);
 
         Call<MovieResult> call = movieDbApi.topRatedMovies();
 
