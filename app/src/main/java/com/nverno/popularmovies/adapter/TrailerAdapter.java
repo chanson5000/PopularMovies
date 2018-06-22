@@ -1,6 +1,7 @@
 package com.nverno.popularmovies.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerAdapterViewHolder> {
 
-    private Context mContext;
+    private final Context mContext;
     private List<Trailer> trailers;
 
     private final TrailerAdapterOnClickHandler mClickHandler;
@@ -49,7 +50,8 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
     }
 
     @Override
-    public TrailerAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    @NonNull
+    public TrailerAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         int layoutId = R.layout.trailer_item;
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
@@ -61,7 +63,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
     }
 
     @Override
-    public void onBindViewHolder(TrailerAdapterViewHolder trailerAdapterViewHolder, int position) {
+    public void onBindViewHolder(@NonNull TrailerAdapterViewHolder trailerAdapterViewHolder, int position) {
         trailerAdapterViewHolder.trailerNameView.setText(trailers.get(position).getName());
     }
 

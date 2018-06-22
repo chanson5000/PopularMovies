@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private PosterAdapter mPosterAdapter;
 
-    MoviesViewModel moviesViewModel;
+    private MoviesViewModel moviesViewModel;
 
     @BindView(R.id.recycler_view_posters)
     RecyclerView mRecyclerView;
@@ -105,12 +105,16 @@ public class MainActivity extends AppCompatActivity implements
     private void setViewModel() {
         showLoadingIndicator();
 
-        if (sMovieSortType == SORT_POPULAR) {
-            moviesViewModel.loadPopularMovies();
-        } else if (sMovieSortType == SORT_TOP_RATED) {
-            moviesViewModel.loadTopRatedMovies();
-        } else {
-            moviesViewModel.loadFavoriteMovies();
+        switch (sMovieSortType) {
+            case SORT_POPULAR:
+                moviesViewModel.loadPopularMovies();
+                break;
+            case SORT_TOP_RATED:
+                moviesViewModel.loadTopRatedMovies();
+                break;
+            default:
+                moviesViewModel.loadFavoriteMovies();
+                break;
         }
     }
 
@@ -134,12 +138,16 @@ public class MainActivity extends AppCompatActivity implements
         getMenuInflater().inflate(R.menu.main, menu);
 
         // Sort by most popular is default and checked.
-        if (sMovieSortType == SORT_POPULAR) {
-            menu.findItem(R.id.sort_by_most_popular).setChecked(true);
-        } else if (sMovieSortType == SORT_TOP_RATED) {
-            menu.findItem(R.id.sort_by_top_rated).setChecked(true);
-        } else {
-            menu.findItem(R.id.show_favorites).setChecked(true);
+        switch (sMovieSortType) {
+            case SORT_POPULAR:
+                menu.findItem(R.id.sort_by_most_popular).setChecked(true);
+                break;
+            case SORT_TOP_RATED:
+                menu.findItem(R.id.sort_by_top_rated).setChecked(true);
+                break;
+            default:
+                menu.findItem(R.id.show_favorites).setChecked(true);
+                break;
         }
 
         return true;

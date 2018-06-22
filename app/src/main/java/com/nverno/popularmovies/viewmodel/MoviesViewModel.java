@@ -20,11 +20,11 @@ import java.util.List;
 
 public class MoviesViewModel extends AndroidViewModel {
 
-    private LiveData<List<Movie>> popularMovies;
-    private LiveData<List<Movie>> topRatedMovies;
-    private LiveData<List<Movie>> favoriteMovies;
+    private final LiveData<List<Movie>> popularMovies;
+    private final LiveData<List<Movie>> topRatedMovies;
+    private final LiveData<List<Movie>> favoriteMovies;
 
-    private MediatorLiveData<List<Movie>> selectedMovies;
+    private final MediatorLiveData<List<Movie>> selectedMovies;
     private LiveData<Movie> selectedMovie;
 
     private boolean isFavoriteMoviesList = false;

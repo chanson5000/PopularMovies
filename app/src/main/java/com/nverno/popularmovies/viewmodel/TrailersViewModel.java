@@ -15,10 +15,10 @@ import java.util.List;
 
 public class TrailersViewModel extends AndroidViewModel {
 
-    private LiveData<List<Trailer>> allTrailers;
+    private final LiveData<List<Trailer>> allTrailers;
     private LiveData<List<Trailer>> selectedTrailers;
 
-    private TrailerRepository trailerRepository;
+    private final TrailerRepository trailerRepository;
 
     public TrailersViewModel(@NonNull Application app) {
         super(app);

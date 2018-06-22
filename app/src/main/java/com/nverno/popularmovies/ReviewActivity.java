@@ -2,7 +2,6 @@ package com.nverno.popularmovies;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,7 +16,6 @@ import com.nverno.popularmovies.adapter.ReviewAdapter;
 import com.nverno.popularmovies.model.Review;
 import com.nverno.popularmovies.viewmodel.ReviewsViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;

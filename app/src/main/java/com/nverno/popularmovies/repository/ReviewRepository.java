@@ -22,11 +22,11 @@ public class ReviewRepository extends Repository {
 
     private static final String LOG_TAG = ReviewRepository.class.getSimpleName();
 
-    private ReviewDatabase reviewDatabase;
+    private final ReviewDatabase reviewDatabase;
 
-    private Context mContext;
+    private final Context mContext;
 
-    private static List<Integer> retrievedReviews = new ArrayList<>();
+    private static final List<Integer> retrievedReviews = new ArrayList<>();
 
     public ReviewRepository(Context context) {
         reviewDatabase = ReviewDatabase.getInstance(context);
@@ -55,30 +55,35 @@ public class ReviewRepository extends Repository {
             public void onResponse(@NonNull Call<ReviewResult> call,
                                    @NonNull Response<ReviewResult> response) {
 
-                if (response.code() == 401) {
-                    Log.e(LOG_TAG, "Authentication failed. Please check your API key.");
-                } else if (response.code() == 404) {
-                    Log.e(LOG_TAG, "Server returned \"Not Found\" error.");
-                } else if (response.code() == 200) {
-                    final List<Review> reviews = response.body().GetReviews();
+                switch (response.code()) {
+                    case 401:
+                        Log.e(LOG_TAG, "Authentication failed. Please check your API key.");
+                        break;
+                    case 404:
+                        Log.e(LOG_TAG, "Server returned \"Not Found\" error.");
+                        break;
+                    case 200:
+                        final List<Review> reviews = response.body().GetReviews();
 
-                    Log.d(LOG_TAG, "Fetched internet data for: " + movieId);
+                        Log.d(LOG_TAG, "Fetched internet data for: " + movieId);
 
-                    for (Review review : reviews) {
-                        review.setMovieId(movieId);
-                    }
-
-                    retrievedReviews.add(movieId);
-
-                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            reviewDatabase.reviewDao().insertMany(reviews);
+                        for (Review review : reviews) {
+                            review.setMovieId(movieId);
                         }
-                    });
-                } else {
-                    Log.e(LOG_TAG,
-                            "Failed to fetch internet data for: " + movieId);
+
+                        retrievedReviews.add(movieId);
+
+                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                reviewDatabase.reviewDao().insertMany(reviews);
+                            }
+                        });
+                        break;
+                    default:
+                        Log.e(LOG_TAG,
+                                "Failed to fetch internet data for: " + movieId);
+                        break;
                 }
             }
 
