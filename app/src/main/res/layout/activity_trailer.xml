@@ -1,49 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/AllMatchParentVertical">
 
     <TextView
         android:id="@+id/trailer_movie_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:textSize="26sp" />
+        style="@style/MovieTitleHeader" />
 
     <TextView
         android:id="@+id/trailer_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="@string/trailers"
-        android:textAlignment="center"
-        android:textSize="22sp"
-        />
+        style="@style/ActivityHeader" />
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        style="@style/FrameLayoutMatchParent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_trailers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginStart="5dp" />
+            style="@style/ExtraActivityRecyclerView" />
+
+        <ProgressBar
+            android:id="@+id/trailers_activity_progress_bar"
+            style="@style/LoadingIndicator" />
 
         <TextView
             android:id="@+id/no_trailers"
             android:text="@string/no_trailers"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:textSize="30sp"
-            android:visibility="invisible" />
+            style="@style/NothingIndicator" />
 
     </FrameLayout>
 

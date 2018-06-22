@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nverno.popularmovies.adapter.TrailerAdapter;
@@ -35,6 +36,8 @@ public class TrailerActivity extends AppCompatActivity implements
     TextView mMovieTitle;
     @BindView(R.id.trailer_header)
     TextView mTrailerHeader;
+    @BindView(R.id.trailers_activity_progress_bar)
+    ProgressBar mLoadingIndicator;
 
     private static final String MOVIE_ID = "MOVIE_ID_EXTRA";
     private static final String MOVIE_TITLE = "MOVIE_NAME_EXTRA";
@@ -78,10 +81,12 @@ public class TrailerActivity extends AppCompatActivity implements
                 .observe(this, new Observer<List<Trailer>>() {
                     @Override
                     public void onChanged(@Nullable List<Trailer> trailers) {
-                        if (trailers == null || trailers.isEmpty()) {
-                            mTrailerHeader.setVisibility(View.INVISIBLE);
-                            mNoTrailers.setVisibility(View.VISIBLE);
+                        if (trailers == null) {
+                            showLoadingIndicator();
+                        } else if (trailers.isEmpty()) {
+                            showIsNoTrailers();
                         } else {
+                            hideAllIndicators();
                             mTrailerAdapter.setTrailersData(trailers);
                         }
                     }
@@ -101,5 +106,42 @@ public class TrailerActivity extends AppCompatActivity implements
         } catch (ActivityNotFoundException ex) {
             startActivity(webIntent);
         }
+    }
+
+    private void showLoadingIndicator() {
+        hideIsNoTrailers();
+        if (mLoadingIndicator.getVisibility() == View.INVISIBLE) {
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideLoadingIndicator() {
+        if (mLoadingIndicator.getVisibility() == View.VISIBLE) {
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void showIsNoTrailers() {
+        hideLoadingIndicator();
+        if (mTrailerHeader.getVisibility() == View.VISIBLE) {
+            mTrailerHeader.setVisibility(View.INVISIBLE);
+        }
+        if (mNoTrailers.getVisibility() == View.INVISIBLE) {
+            mNoTrailers.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideIsNoTrailers() {
+        if (mTrailerHeader.getVisibility() == View.INVISIBLE) {
+            mTrailerHeader.setVisibility(View.VISIBLE);
+        }
+        if (mNoTrailers.getVisibility() == View.VISIBLE) {
+            mNoTrailers.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void hideAllIndicators() {
+        hideIsNoTrailers();
+        hideLoadingIndicator();
     }
 }

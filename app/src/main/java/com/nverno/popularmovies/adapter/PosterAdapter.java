@@ -49,7 +49,7 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdap
 
     @NonNull
     public PosterAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        int layoutId = R.layout.poster_list_item;
+        int layoutId = R.layout.poster_item;
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
         View view = inflater.inflate(layoutId, viewGroup, false);

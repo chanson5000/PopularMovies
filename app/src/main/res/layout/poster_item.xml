@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/PosterItemLinearLayout">
+
+    <ImageView
+        android:id="@+id/movie_poster"
+        android:contentDescription="@string/poster_image_content_description"
+        style="@style/PosterItemImage" />
+
+</LinearLayout>

@@ -13,23 +13,15 @@ public class ReviewResult {
     @Expose
     private List<Review> results;
 
-    @Expose
-    private String status_message;
-
     public int getMovieId() {
         return id;
     }
 
     public List<Review> GetReviews() {
-
         if (results == null) {
             results = new ArrayList<>();
         }
 
         return results;
-    }
-
-    public String GetStatusMessage() {
-        return status_message;
     }
 }

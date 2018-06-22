@@ -7,10 +7,10 @@
     <string name="top_rated">Top Rated</string>
     <string name="most_popular">Most Popular</string>
     <string name="reviews">Reviews</string>
-    <string name="no_reviews">No Reviews…</string>
+    <string name="no_reviews">No Reviews To Show…</string>
     <string name="trailers">Trailers</string>
-    <string name="no_trailers">No Trailers…</string>
+    <string name="no_trailers">No Trailers To Show…</string>
     <string name="favorite">Favorite</string>
     <string name="un_favorite">Un-Favorite</string>
-    <string name="no_favorites">No Favorites…</string>
+    <string name="no_movies">No Movies To Show…</string>
 </resources>

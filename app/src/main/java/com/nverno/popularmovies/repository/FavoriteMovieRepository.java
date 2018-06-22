@@ -20,7 +20,7 @@ public class FavoriteMovieRepository {
         favoriteMovieDatabase = FavoriteMovieDatabase.getInstance(context);
     }
 
-    public void removeFavoriteMovie(final Movie movie) {
+    public void remove(final Movie movie) {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -29,7 +29,7 @@ public class FavoriteMovieRepository {
         });
     }
 
-    public void addFavoriteMovie(final Movie movie) {
+    public void add(final Movie movie) {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -38,11 +38,7 @@ public class FavoriteMovieRepository {
         });
     }
 
-    public LiveData<List<Movie>> getFavoriteMovies() {
+    public LiveData<List<Movie>> getAll() {
         return favoriteMovieDatabase.movieDao().getAll();
-    }
-
-    public LiveData<Movie> getMovieById(int movieId) {
-        return favoriteMovieDatabase.movieDao().getMovieById(movieId);
     }
 }

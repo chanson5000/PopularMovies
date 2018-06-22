@@ -13,19 +13,11 @@ public class MovieResult {
     @Expose
     private List<Movie> results;
 
-    @Expose
-    private String status_message;
-
     public List<Movie> GetMovies() {
-
         if (results == null) {
             results = new ArrayList<>();
         }
 
         return results;
-    }
-
-    public String GetStatusMessage() {
-        return status_message;
     }
 }

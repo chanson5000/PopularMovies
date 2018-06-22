@@ -16,19 +16,21 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PopularMovieRepository {
+public class PopularMovieRepository extends Repository {
 
     private static final String LOG_TAG = PopularMovieRepository.class.getSimpleName();
 
     private PopularMovieDatabase popularMovieDatabase;
 
+    private Context mContext;
+
     private static boolean databaseUpdated = false;
 
     public PopularMovieRepository(Context context) {
         popularMovieDatabase = PopularMovieDatabase.getInstance(context);
+
+        mContext = context;
 
         cacheWebData();
     }
@@ -36,17 +38,17 @@ public class PopularMovieRepository {
     // Fetch popular movies from TheMovieDb.Org for cache into our database.
     private void cacheWebData() {
 
-        if (databaseUpdated) {
-            Log.d(LOG_TAG, "Skipped fetching Popular Movie data from the internet.");
+        if (networkNotAvailable(mContext)) {
+            Log.d(LOG_TAG, "Skipping fetch, network not available.");
             return;
         }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        if (databaseUpdated) {
+            Log.d(LOG_TAG, "Skipped fetching internet data.");
+            return;
+        }
 
-        MovieDbApi movieDbApi = retrofit.create(MovieDbApi.class);
+        MovieDbApi movieDbApi = getMovieDbApi(MovieDbApi.class);
 
         Call<MovieResult> call = movieDbApi.popularMovies();
 
@@ -57,12 +59,14 @@ public class PopularMovieRepository {
             public void onResponse(@NonNull Call<MovieResult> call,
                                    @NonNull Response<MovieResult> response) {
 
-                if (response.code() == 401 || response.code() == 404) {
-                    Log.e(LOG_TAG, response.body().GetStatusMessage());
+                if (response.code() == 401) {
+                    Log.e(LOG_TAG, "Authentication failed. Please check your API key.");
+                } else if (response.code() == 404) {
+                    Log.e(LOG_TAG, "Server returned \"Not Found\" error.");
                 } else if (response.code() == 200) {
                     final List<Movie> movies = response.body().GetMovies();
 
-                    Log.d(LOG_TAG, "Loading Popular Movie data from the internet.");
+                    Log.d(LOG_TAG, "POPULAR MOVIES - Fetched internet data.");
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
@@ -73,7 +77,7 @@ public class PopularMovieRepository {
                     databaseUpdated = true;
                 } else {
                     Log.e(LOG_TAG,
-                            "Failed to retrieve Popular Movie data from the internet.");
+                            "Failed to fetch internet data.");
                 }
             }
 
@@ -81,16 +85,12 @@ public class PopularMovieRepository {
             public void onFailure(@NonNull Call<MovieResult> call, @NonNull Throwable t) {
                 t.printStackTrace();
                 Log.e(LOG_TAG,
-                        "Failed to retrieve Popular Movie data from the internet.");
+                        "Failed to fetch internet data.");
             }
         });
     }
 
-    public LiveData<List<Movie>> getPopularMoviesSorted() {
-        return popularMovieDatabase.movieDao().getByPopularity();
-    }
-
-    public LiveData<Movie> getPopularMovieById(int movieId) {
-        return popularMovieDatabase.movieDao().getMovieById(movieId);
+    public LiveData<List<Movie>> getAllSorted() {
+        return popularMovieDatabase.movieDao().getAllSortedByPopularity();
     }
 }
