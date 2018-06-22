@@ -21,9 +21,9 @@ public class TopRatedMovieRepository extends Repository {
 
     private static final String LOG_TAG = TopRatedMovieRepository.class.getSimpleName();
 
-    private TopRatedMovieDatabase topRatedMovieDatabase;
+    private final TopRatedMovieDatabase topRatedMovieDatabase;
 
-    private Context mContext;
+    private final Context mContext;
 
     private static boolean databaseUpdated = false;
 
@@ -56,25 +56,30 @@ public class TopRatedMovieRepository extends Repository {
             public void onResponse(@NonNull Call<MovieResult> call,
                                    @NonNull Response<MovieResult> response) {
 
-                if (response.code() == 401) {
-                    Log.e(LOG_TAG, "Authentication failed. Please check your API key.");
-                } else if (response.code() == 404) {
-                    Log.e(LOG_TAG, "Server returned \"Not Found\" error.");
-                } else if (response.code() == 200) {
-                    final List<Movie> movies = response.body().GetMovies();
+                switch (response.code()) {
+                    case 401:
+                        Log.e(LOG_TAG, "Authentication failed. Please check your API key.");
+                        break;
+                    case 404:
+                        Log.e(LOG_TAG, "Server returned \"Not Found\" error.");
+                        break;
+                    case 200:
+                        final List<Movie> movies = response.body().GetMovies();
 
-                    Log.d(LOG_TAG, "Fetched internet data.");
-                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            topRatedMovieDatabase.movieDao().insertMany(movies);
-                        }
-                    });
+                        Log.d(LOG_TAG, "Fetched internet data.");
+                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                topRatedMovieDatabase.movieDao().insertMany(movies);
+                            }
+                        });
 
-                    databaseUpdated = true;
-                } else {
-                    Log.e(LOG_TAG,
-                            "Failed to fetch internet data.");
+                        databaseUpdated = true;
+                        break;
+                    default:
+                        Log.e(LOG_TAG,
+                                "Failed to fetch internet data.");
+                        break;
                 }
             }
 

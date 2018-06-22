@@ -15,10 +15,10 @@ import java.util.List;
 
 public class ReviewsViewModel extends AndroidViewModel {
 
-    private LiveData<List<Review>> allReviews;
+    private final LiveData<List<Review>> allReviews;
     private LiveData<List<Review>> selectedReviews;
 
-    private ReviewRepository reviewRepository;
+    private final ReviewRepository reviewRepository;
 
     public ReviewsViewModel(@NonNull Application app) {
         super(app);

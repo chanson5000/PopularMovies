@@ -16,7 +16,7 @@ import java.util.List;
 
 public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdapterViewHolder> {
 
-    private Context mContext;
+    private final Context mContext;
     private List<Movie> movies;
 
     private final PosterAdapterOnClickHandler mClickHandler;

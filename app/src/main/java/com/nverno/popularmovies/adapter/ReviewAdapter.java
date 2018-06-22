@@ -1,6 +1,7 @@
 package com.nverno.popularmovies.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdapterViewHolder> {
 
-    private Context mContext;
+    private final Context mContext;
     private List<Review> reviews;
 
     public ReviewAdapter(Context context) {
@@ -35,7 +36,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
     }
 
     @Override
-    public ReviewAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    @NonNull
+    public ReviewAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         int layoutId = R.layout.review_item;
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -46,7 +48,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
     }
 
     @Override
-    public void onBindViewHolder(ReviewAdapterViewHolder reviewAdapterViewHolder, int position) {
+    public void onBindViewHolder(@NonNull ReviewAdapterViewHolder reviewAdapterViewHolder, int position) {
 
         String quoteReview = "\"" + reviews.get(position).getContent() + "\"";
         String dashAuthor = "— " + reviews.get(position).getAuthor();
