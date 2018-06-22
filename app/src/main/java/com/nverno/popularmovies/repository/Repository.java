@@ -16,11 +16,11 @@ abstract class Repository {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        if (cm == null) { return true; }
+
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
         return netInfo == null || !netInfo.isConnectedOrConnecting();
-
-//        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     MovieDbApi getMovieDbApi(Class<MovieDbApi> apiClass) {
