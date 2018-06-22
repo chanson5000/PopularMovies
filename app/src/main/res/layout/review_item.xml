@@ -4,27 +4,14 @@
 
     <TextView
         android:id="@+id/review_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:textStyle="italic"
-        android:textSize="12sp" />
+        style="@style/ReviewContent" />
 
     <TextView
         android:id="@+id/review_author"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:paddingStart="5dp"
-        android:paddingEnd="30dp"
-        android:textAlignment="textEnd"
-        android:textSize="16sp" />
+        style="@style/ReviewAuthor" />
 
     <View
         android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="?android:attr/listDivider" />
+        style="@style/HorizontalDivider" />
 
 </LinearLayout>

@@ -16,12 +16,7 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_trailers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginStart="5dp" />
+            style="@style/ExtraActivityRecyclerView" />
 
         <ProgressBar
             android:id="@+id/trailers_activity_progress_bar"
