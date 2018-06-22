@@ -43,7 +43,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.favorite_movie)
     ToggleButton mFavoriteMovie;
 
-    MoviesViewModel moviesViewModel;
+    private MoviesViewModel moviesViewModel;
 
     private static final String MOVIE_ID = "MOVIE_ID_EXTRA";
     private static final String MOVIE_SORT_TYPE = "MOVIE_SORT_TYPE";

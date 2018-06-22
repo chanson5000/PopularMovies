@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private PosterAdapter mPosterAdapter;
 
-    MoviesViewModel moviesViewModel;
+    private MoviesViewModel moviesViewModel;
 
     @BindView(R.id.recycler_view_posters)
     RecyclerView mRecyclerView;
