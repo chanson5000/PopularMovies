@@ -8,7 +8,7 @@ You’ll build the complete functionality of this app in two stages which you wi
 
 ## API Key
 To run this app correctly, you must insert your themoviedb.org API key into the file:
-app\src\main\java\com\nverno\popularmovies\moviedb\MovieDbApi.java
+[app\src\main\java\com\nverno\popularmovies\moviedb\MovieDbSecrets.java](./app/src/main/java/com/nverno/popularmovies/moviedb/MovieDbSecrets.java)
 
 ## Author
 [Cory Hanson](https://coryhanson.us)
