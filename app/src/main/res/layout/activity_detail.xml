@@ -1,96 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraint_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraint_top_details"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+            app:layout_constraintBottom_toTopOf="@+id/constraint_bottom_details"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/movie_poster_container"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/poster_right_constraint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                >
 
                 <ImageView
                     android:id="@+id/movie_poster_detail"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
                     android:contentDescription="@string/poster_image_content_description"
-                    style="@style/ActivityDetailPosterView"/>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="vertical">
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/poster_right_constraint"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/movie_poster_container"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/movie_title_detail"
-                    style="@style/DetailMovieTitle" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="Movie Title"
+                    android:textAlignment="center"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/favorite_movie"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
 
                 <ToggleButton
                     android:id="@+id/favorite_movie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
                     android:onClick="toggleFavorite"
-                    android:textOn="@string/favorite"
+                    android:textAlignment="center"
                     android:textOff="@string/favorite"
-                    style="@style/ActivityDetailToggleButton" />
+                    android:textOn="@string/favorite"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@id/static_rating"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/movie_title_detail" />
 
                 <TextView
+                    android:id="@+id/static_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/rating"
-                    style="@style/DetailActivityDetail" />
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toTopOf="@id/movie_rating_detail"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/favorite_movie" />
 
                 <TextView
                     android:id="@+id/movie_rating_detail"
-                    style="@style/DetailActivityDetailDescription" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="9.9"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toTopOf="@id/static_release_date"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/static_rating" />
 
                 <TextView
+                    android:id="@+id/static_release_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/release_date"
-                    style="@style/DetailActivityDetail" />
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toTopOf="@id/movie_release_detail"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/movie_rating_detail" />
 
                 <TextView
                     android:id="@+id/movie_release_detail"
-                    style="@style/DetailActivityDetailDescription" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 July, 1985"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/static_release_date" />
 
-            </LinearLayout>
-        </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/move_description_detail"
-            style="@style/ActivityDetailMovieDescription" />
+        </android.support.constraint.ConstraintLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraint_bottom_details"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            style="?attr/buttonBarButtonStyle">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/constraint_top_details">
 
-        <Button
-            android:id="@+id/click_reviews"
-            android:text="@string/reviews"
-            android:onClick="showReviews"
-            style="@style/ActivityDetailButton" />
+            <TextView
+                android:id="@+id/move_description_detail"
+                style="@style/ActivityDetailMovieDescription"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/button_constraint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/click_trailers"
-            android:text="@string/trailers"
-            android:onClick="showTrailers"
-            style="@style/ActivityDetailButton"/>
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/button_constraint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/move_description_detail">
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/click_reviews"
+                    style="@style/ActivityDetailButton"
+                    android:onClick="showReviews"
+                    android:text="@string/reviews"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/click_trailers"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+                <Button
+                    android:id="@+id/click_trailers"
+                    style="@style/ActivityDetailButton"
+                    android:onClick="showTrailers"
+                    android:text="@string/trailers"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/click_reviews"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
 
 </ScrollView>

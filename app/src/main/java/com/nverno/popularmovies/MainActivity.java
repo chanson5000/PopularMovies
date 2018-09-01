@@ -120,11 +120,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onClick(Movie movieForDay) {
-        Context context = this;
-
-        // Where this click intent is going...
-        Class destinationClass = DetailActivity.class;
-        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
+        Intent intentToStartDetailActivity = new Intent(this, DetailActivity.class);
 
         intentToStartDetailActivity.putExtra(MOVIE_ID, movieForDay.getId());
         intentToStartDetailActivity.putExtra(MOVIE_SORT_TYPE, sMovieSortType);
